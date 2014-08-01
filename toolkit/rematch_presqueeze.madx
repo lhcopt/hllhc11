@@ -1,0 +1,18 @@
+grad=140; scl=0.10; sch=0.95;sc79=0.999+0.000;bmaxds=500;imb=1.30;
+match_on_triplet=3; match_on_tripletconst=0;ir5q4sym=0;ir5q5sym=0;
+if (arc_squeeze==0){
+  scl=0.47; match_inj_tunes=1;match_on_aperture=1;
+}  else {
+  scl=0.10; match_inj_tunes=0;match_on_aperture=0;
+};
+apq789=0; apq5=0; apq6=0; apq4=0; apq1011=0;
+jac_calls=30; bisec=3; tol=1e-20;
+betx_mcby= 1037;bety_mcby = 668; bety_q3=7063;
+if (is_thin==1){
+ grad=145;
+ jac_calls=30;
+ bety_q3=0;};
+betxip5b1=round(betx0_IP5*1e3)/1e3;betyip5b1=round(bety0_IP5*1e3)/1e3;
+betxip5b2=betxip5b1;betyip5b2=betxip5b1;
+exec,selectIR15(5,45,56,b1);exec,selectIR15(5,45,56,b2);
+call,file="toolkit/rematch_ir15_b12.madx";

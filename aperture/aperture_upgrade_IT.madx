@@ -1,0 +1,465 @@
+! Author: J. Miles based on preliminary data from N. Kos, P. Fessia, R. Jones - February 2009
+! THE FOLLOWING CODE IS USED TO GENERATE THE BEAM SCREEN APERTURE
+! MODEL FOR THE PHASE 1 UPGRADE. 
+!
+! Three different BS cross sections are available, namely:
+!
+! OCTAGON, CIRCLE, RECTELL
+!
+! The optimised octagon can be constructed using only 2 parameters, thanks
+! to its symmetry. The first parameter is the BS outer radius between corners
+! - called R1 by N. Kos - at 293K (RT). The second parameter is the angle subtended
+! at the centre of the BS by the flat (without cooling tubes) between corners. 
+! This angle is typically 20 degrees and the flats are "short". Additional
+! radii are called R2 and R3 - the outer radius between flats with cooling tubes
+! and the outer radius between flats without colling tubes, respectively - but
+! they are not required to construct the octagon.
+!
+! The BS outer radius R1 is derived from the nominal cold bore inner diameter
+! by applying the appropriate manufacturing tolerances. For details, see EDMS
+! 350449 (N. Kos). The formula for R1 is given below.
+!
+! The aperture dimensions are derived from the optimised octagon and they
+! can be applied to all three BS cross-setions. 
+!
+! The aperture in the octagon at 5K is calculated by applying manufacturing tolerances
+! to R1 and R2 according to ISO standards for seamless tubes and pipes of a given
+! wall thickness (base material plus coating):
+!   outside diameter :   D4  (+- 0.5%)
+!   wall thickness   :   T3  (+- 10%)
+! For details, see EDMS 350449 (N.Kos). The resulting dimensions, called A1 and 
+! A2 respectively, are sufficient to specify the aperture completely. (In fact,
+! only A1 together with the angle between (short) flats are required).
+!
+! The circular BS corresponds to the largest circle inscribed in the 
+! octagon: that is to say, a circle with outer radius R2 which is
+! tangential to the cooling tube flats. Therfore, the radius of the circular 
+! aperture is A2. 
+!
+! The cross-section of the BS installed in the current machine (2008) is the 
+! superposition of a rectangle and a circle to obtain a "truncated circle". 
+! This is implemented in MAD by a RECTELLIPSE, which requires only 2 different
+! parameters A1 and A2, that are applied according the desired BS orientation. 
+!
+! The triplet quadrupole at Q1 contains a thick absorber which is included in
+! the calculation of A1 for Q1 only.
+!
+! The radial BS size (corner) at RT for a given cold bore diameter is calculated
+! as follows (shortened variable names, D means "delta"):
+!
+! R1 = ID/2 - DID/2 - g - d - Dd - Db 
+!
+! The half-aperture (corner) at 5K for a given CB diameter is calculated
+! as follows (shortened variable names, D means "delta"):
+!
+! A1 = 0.99727(ID/2 - 3DID/2 - 2g - d - 3Dd - 4Db - w - Dw - bssl)
+!
+! where :
+! R1     = radial BS size 
+! A1     = vertical BS half-aperture
+! P506 thermal contraction factor (293K -> 5K) = 0.99727
+! CB_ID  = nominal CB inner diameter
+! DCB_ID = tolerance on CB inner diameter
+! MIN_g  = minimum radial gap
+! BS_d   = nominal BS support thickness
+! DBS_d  = tolerance on BS support thickness
+! DBS_b  = tolerance on BS outer half-dimension
+! BS_w   = nominal BS wall thickness	
+! DBS_w  = tolerance on BS wall thickness
+! BS_s   = BS straightness error  (m/m)
+! BS_l   = longitudinal distance between rings (mm)
+! BS_A   = absorber thickness (mm)
+
+! 20/01/2012: scaling defined externally
+! 19/04/2012: new round implemented
+
+CB_ID  := 110.6;      ! this corresponds to a 120mm coil diameter
+DCB_ID := 1.2;
+MIN_g  := 0.1;
+BS_d   := 0.4;
+DBS_d  := 0.03;
+DBS_b  := 0.25;
+BS_w   := 1.575;
+DBS_w  := 0.1;
+BS_s   := 0.001;
+BS_l   := 400.0;
+BS_A   := 6.0;        !was 9 mm and then 9.8 mm in previous version
+!
+! ... everything is derived from the  optimised OCTAGON
+!ap_mqx=120;
+scaleap=ap_mqx/120.;      ! rescaling the IT to actual aperture
+Q2Q3_R1 := CB_ID/2.-DCB_ID/2.-MIN_g-BS_d-DBS_d-DBS_b;
+Q2Q3_A1 := scaleap*(0.99727*(CB_ID/2.-3.*DCB_ID/2.-2.*MIN_g-BS_d-3.*DBS_d-4.*DBS_b-BS_w-DBS_w-BS_s*BS_l));
+Q1_A1   := (Q2Q3_A1-0.99727*BS_A);
+!
+phi_deg := 21.365;      ! angle subtended by flats without cooling tubes and fixed to leave 5.2 mm
+                        ! for the cooling tubes 
+                        ! was 20 degrees in SLHCV1.0, then 18.529 in SLHCV2.0
+phi_rad := phi_deg*TWOPI/360.;
+! ... symmetry allows us to work only with parallels to the corner (short) flats
+Q2Q3_xx1 := 1000.*Q2Q3_A1;
+Q2Q3_yy1 := 0.0;
+Q2Q3_xx2 := 1000.*(Q2Q3_A1*cos(phi_rad));
+Q2Q3_yy2 := 1000.*(Q2Q3_A1*sin(phi_rad));
+! ... compute slope and intercept of flats; this is used to locate the
+! ... absorber in Q1
+! ... parallel to the BS short flat
+Qm1 := (Q2Q3_yy2 - Q2Q3_yy1)/(Q2Q3_xx2 - Q2Q3_xx1);
+Qc1 := (Q2Q3_yy1 - Qm1*Q2Q3_xx1)/1000.;
+! ... parallel to the BS long flat (with cooling tube)
+Qm2 := -1.;
+Qc2 := (Q2Q3_yy2 - Qm2*Q2Q3_xx2)/1000.;
+! ... A2 is computed from the intersection of a 45 deg line and 
+! ... a normal parallel to the BS long flat (with a cooling tube)
+Q2Q3_A2 := sqrt(Qc2*Qc2/2.);
+Q1_A2   := Q2Q3_A2-0.99727*BS_A;
+! ... locate a parallel to the face of the absorber
+Q1_xx1 := 1000.*Q1_A1;
+Q1_yy1 := 0.0;
+Q1_xx2 := 1000.*Q1_A1;
+Q1_yy2 := 1000.*(Qm2*Q1_A1 + Qc2);
+!
+! *** macro definitions ***
+Q2Q3_A(xx1,yy1,xx2,yy2): macro = {
+print,text="0.0xx1  0.0yy1";
+print,text="0.0xx2  0.0yy2";
+print,text="0.0yy2  0.0xx2";
+print,text="0.0yy1  0.0xx1";
+print,text="-0.0yy2  0.0xx2";
+print,text="-0.0xx2  0.0yy2";
+print,text="-0.0xx1  0.0yy1";
+print,text="-0.0xx2 -0.0yy2";
+print,text="-0.0yy2 -0.0xx2";
+print,text="0.0yy1  -0.0xx1";
+print,text="0.0yy2  -0.0xx2";
+print,text="0.0xx2  -0.0yy2";
+print,text="0.0xx1  0.0yy1";
+};
+Q1_A(xx1,yy1,xx2,yy2): macro = {
+print,text="0.0xx1  0.0yy1";
+print,text="0.0xx2  0.0yy2";
+print,text="0.0yy2  0.0xx2";
+print,text="-0.0yy2  0.0xx2";
+print,text="-0.0xx2  0.0yy2";
+print,text="-0.0xx2 -0.0yy2";
+print,text="-0.0yy2 -0.0xx2";
+print,text="0.0yy2  -0.0xx2";
+print,text="0.0xx2  -0.0yy2";
+print,text="0.0xx1  0.0yy1";
+};
+Q1_B(xx1,yy1,xx2,yy2): macro = {
+print,text="0.0xx1   0.0yy1";
+print,text="0.0xx2   0.0yy2";
+print,text="-0.0xx2  0.0yy2";
+print,text="-0.0xx1  0.0yy1";
+print,text="-0.0xx1 -0.0yy1";
+print,text="-0.0xx2 -0.0yy2";
+print,text="0.0xx2  -0.0yy2";
+print,text="0.0xx1  -0.0yy1";
+print,text="0.0xx1   0.0yy1";
+};
+
+! *** end of macro definitions ***
+!
+OCTAGON = 1;
+CIRCLE  = 2;
+RECTELL = 3;
+REGOCTA = 4; ! default
+REGOCTATOLL = 5;
+if (bs_type==0){  bs_type=4;};
+
+if (bs_type == OCTAGON)
+{
+ system, "rm  -f Q1_APERTURE";
+ system, "rm  -f Q2Q3_APERTURE";
+
+ assign, echo="Q1_APERTURE";
+ exec, Q1_A($Q1_xx1, $Q1_yy1, $Q1_xx2, $Q1_yy2);
+ assign, echo=terminal;
+
+ assign, echo="Q2Q3_APERTURE";
+ exec, Q2Q3_A($Q2Q3_xx1, $Q2Q3_yy1, $Q2Q3_xx2, $Q2Q3_yy2);
+ assign, echo=terminal;
+
+
+};
+
+if (bs_type == CIRCLE)
+{
+Q2Q3_R1 := CB_ID/2.*scaleap-DCB_ID/2.-BS_A/2;
+r_Q2Q3:= Q2Q3_R1/1000.;
+g_Q2Q3:= Q2Q3_R1/1000.;
+r_Q1  := Q2Q3_R1/1000.;
+g_Q1  := Q2Q3_R1/1000.;
+value,r_Q1*2,g_Q1,r_Q2Q3,g_Q2Q3;
+
+};
+
+if (bs_type == RECTELL)
+{
+r_Q2Q3:= Q2Q3_A1/1000.;
+g_Q2Q3:= Q2Q3_A2/1000.;
+r_Q1  := Q1_A1/1000.  ;     ! absorber is 9mm at RT
+g_Q1  := Q1_A2/1000.  ;
+
+};
+
+
+if (bs_type == REGOCTA)
+{
+ value,ap_mqx;
+ system, "rm Q1_APERTURE";
+ system, "rm Q2Q3_APERTURE";
+ap_mqx=150;
+EL_T =1.5; ! helium thichness
+CB_T =5; ! cold bore thickness !it was (120-110.6)/2*1.25=5.875
+CB_BS=1.5; ! cold bore to beam screen
+BS_T =2.0; ! beam screen thickness
+W_T  =6.0; ! tungsten thichness
+!K_T  =0.99727; ! P506 thermal contraction factor (293K -> 5K) = 0.99727
+angle1=22.5;angle2=67.5;
+x_Q1=(ap_mqx/2-EL_T-CB_T-CB_BS-BS_T-W_T);
+r_Q1=x_Q1/cos(angle1/180*pi);
+ value,x_Q1*2,r_Q1*2; ! mid plane distance and largest radius in the vacuum
+ xx1=r_Q1*cos(angle1/180*pi)*1000;
+ yy1=r_Q1*sin(angle1/180*pi)*1000;
+ xx2=r_Q1*cos(angle2/180*pi)*1000;
+ yy2=r_Q1*sin(angle2/180*pi)*1000;
+ value,xx1,yy1,xx2,yy2;
+
+ assign, echo="Q2Q3_APERTURE";
+ exec,Q1_B($xx1,$yy1,$xx2,$yy2);
+ assign, echo=terminal;
+
+ W_T  =16.0; ! tungsten thichness
+ angle1=22.5;angle2=67.5;
+ x_Q1=(ap_mqx/2-EL_T-CB_T-CB_BS-BS_T-W_T);
+ r_Q1=x_Q1/cos(angle1/180*pi);
+ value,x_Q1*2,r_Q1*2; ! mid plane distance and largest radius in the vacuum
+ xx1=r_Q1*cos(angle1/180*pi)*1000;
+ yy1=r_Q1*sin(angle1/180*pi)*1000;
+ xx2=r_Q1*cos(angle2/180*pi)*1000;
+ yy2=r_Q1*sin(angle2/180*pi)*1000;
+ value,xx1,yy1,xx2,yy2;
+
+ assign, echo="Q1_APERTURE";
+ exec,Q1_B($xx1,$yy1,$xx2,$yy2);
+ assign, echo=terminal;
+
+};
+
+
+if (bs_type == REGOCTATOLL)
+{
+ system, "rm  -f Q1_APERTURE";
+ system, "rm  -f Q2Q3_APERTURE";
+
+ assign, echo="Q1_APERTURE";
+ exec, Q1_A($Q1_xx1, $Q1_yy1, $Q1_xx2, $Q1_yy2);
+ assign, echo=terminal;
+
+ assign, echo="Q2Q3_APERTURE";
+ exec, Q1_A($Q1_xx1, $Q1_yy1, $Q1_xx2, $Q1_yy2);
+ assign, echo=terminal;
+
+};
+
+
+
+! Author J. Miles based on preliminary data from N. Kos, P.Fessia, R. Jones 17/02/2009
+!
+! S. Fartoukh: Implement mechanical tolerance 18/02/2009 and TAS aperture
+! S. Fartoukh: Add new elements (BPM,mcbx2,nl corrector for SLHCV2), 30/09/2009
+! 20/01/2012 R. De Maria: Rename, add new elements, add rescaling
+! 23/04/2012 R. De Maria: reset D1 tol to 1mm
+!=================================================
+! INSERTION APERTURE MODEL : OPTIMISED OCTAGONAL
+! BEAM SCREEN WITH 9mm ABSORBER IN Q1
+!=================================================
+
+! Round aperture model for TAS-BPM-D1
+! Polygon shape for IT-CP
+
+ap_mqx=150; bs_type=4;
+r_TAS   := 0.0270;          ! was 24 mm in slhcv1 and 25 mm in slhcv2 and 30 mm in slhc3, hllhc1.1
+r_BPMSQW:= ap_mqx/2000;          ! was 60 mm in slhcv1 and slhcv2
+r_BPMSQ := ap_mqx/2000;          ! was 60 mm in slhcv1 and slhcv2
+a_D1    := ap_mqx/2000;          ! was warm bore and ap_mqx/2000+0.005 in slhc3
+
+!(r,h,v) tolerance for TAS-IT-CP-D1
+
+r_tol_TAS:=0.0020; h_tol_TAS:=0.0005; v_tol_TAS:=0.0005;
+r_tol_IT :=0.0006; h_tol_IT :=0.0010; v_tol_IT :=0.0010;
+r_tol_BPM:=0.0025; h_tol_BPM:=0.0000; v_tol_BPM:=0.0000;
+r_tol_D1 :=0.0006; h_tol_D1 :=0.0010; v_tol_D1 :=0.0010;
+
+
+! ... TAS
+TAXS.1R1, APERTYPE=RECTELLIPSE, APERTURE={ r_TAS,    r_TAS,    r_TAS,   r_TAS}, APER_TOL = {r_tol_TAS , h_tol_TAS , v_tol_TAS };
+TAXS.1L1, APERTYPE=RECTELLIPSE, APERTURE={ r_TAS,    r_TAS,    r_TAS,   r_TAS}, APER_TOL = {r_tol_TAS , h_tol_TAS , v_tol_TAS };
+TAXS.1R5, APERTYPE=RECTELLIPSE, APERTURE={ r_TAS,    r_TAS,    r_TAS,   r_TAS}, APER_TOL = {r_tol_TAS , h_tol_TAS , v_tol_TAS };
+TAXS.1L5, APERTYPE=RECTELLIPSE, APERTURE={ r_TAS,    r_TAS,    r_TAS,   r_TAS}, APER_TOL = {r_tol_TAS , h_tol_TAS , v_tol_TAS };
+
+! ... BPMSQW
+BPMSQW.1R1.B1,APERTYPE=RECTELLIPSE,APERTURE={r_BPMSQW, r_BPMSQW, r_BPMSQW, r_BPMSQW}, APER_TOL = {r_tol_BPM , h_tol_BPM , v_tol_BPM };
+BPMSQW.1L1.B1,APERTYPE=RECTELLIPSE,APERTURE={r_BPMSQW, r_BPMSQW, r_BPMSQW, r_BPMSQW}, APER_TOL = {r_tol_BPM , h_tol_BPM , v_tol_BPM };
+BPMSQW.1R5.B1,APERTYPE=RECTELLIPSE,APERTURE={r_BPMSQW, r_BPMSQW, r_BPMSQW, r_BPMSQW}, APER_TOL = {r_tol_BPM , h_tol_BPM , v_tol_BPM };
+BPMSQW.1L5.B1,APERTYPE=RECTELLIPSE,APERTURE={r_BPMSQW, r_BPMSQW, r_BPMSQW, r_BPMSQW}, APER_TOL = {r_tol_BPM , h_tol_BPM , v_tol_BPM };
+BPMSQW.1R1.B2,APERTYPE=RECTELLIPSE,APERTURE={r_BPMSQW, r_BPMSQW, r_BPMSQW, r_BPMSQW}, APER_TOL = {r_tol_BPM , h_tol_BPM , v_tol_BPM };
+BPMSQW.1L1.B2,APERTYPE=RECTELLIPSE,APERTURE={r_BPMSQW, r_BPMSQW, r_BPMSQW, r_BPMSQW}, APER_TOL = {r_tol_BPM , h_tol_BPM , v_tol_BPM };
+BPMSQW.1R5.B2,APERTYPE=RECTELLIPSE,APERTURE={r_BPMSQW, r_BPMSQW, r_BPMSQW, r_BPMSQW}, APER_TOL = {r_tol_BPM , h_tol_BPM , v_tol_BPM };
+BPMSQW.1L5.B2,APERTYPE=RECTELLIPSE,APERTURE={r_BPMSQW, r_BPMSQW, r_BPMSQW, r_BPMSQW}, APER_TOL = {r_tol_BPM , h_tol_BPM , v_tol_BPM };
+
+! ... INNER TRIPLET
+! ... Q1
+MQXFA.A1R1,    APERTYPE="Q1_APERTURE", APER_TOL ={r_tol_IT , h_tol_IT , v_tol_IT };
+MQXFA.A1L1,    APERTYPE="Q1_APERTURE", APER_TOL ={r_tol_IT , h_tol_IT , v_tol_IT };
+MQXFA.A1R5,    APERTYPE="Q1_APERTURE", APER_TOL ={r_tol_IT , h_tol_IT , v_tol_IT };
+MQXFA.A1L5,    APERTYPE="Q1_APERTURE", APER_TOL ={r_tol_IT , h_tol_IT , v_tol_IT };
+MQXFA.B1R1,    APERTYPE="Q1_APERTURE", APER_TOL ={r_tol_IT , h_tol_IT , v_tol_IT };
+MQXFA.B1L1,    APERTYPE="Q1_APERTURE", APER_TOL ={r_tol_IT , h_tol_IT , v_tol_IT };
+MQXFA.B1R5,    APERTYPE="Q1_APERTURE", APER_TOL ={r_tol_IT , h_tol_IT , v_tol_IT };
+MQXFA.B1L5,    APERTYPE="Q1_APERTURE", APER_TOL ={r_tol_IT , h_tol_IT , v_tol_IT };
+
+
+! ... BPMSQ
+BPMSQ.1R1.B1,APERTYPE=RECTELLIPSE, APERTURE={ r_BPMSQ, r_BPMSQ, r_BPMSQ, r_BPMSQ}, APER_TOL = {r_tol_BPM , h_tol_BPM , v_tol_BPM };
+BPMSQ.1L1.B1,APERTYPE=RECTELLIPSE, APERTURE={ r_BPMSQ, r_BPMSQ, r_BPMSQ, r_BPMSQ}, APER_TOL = {r_tol_BPM , h_tol_BPM , v_tol_BPM };
+BPMSQ.1R5.B1,APERTYPE=RECTELLIPSE, APERTURE={ r_BPMSQ, r_BPMSQ, r_BPMSQ, r_BPMSQ}, APER_TOL = {r_tol_BPM , h_tol_BPM , v_tol_BPM };
+BPMSQ.1L5.B1,APERTYPE=RECTELLIPSE, APERTURE={ r_BPMSQ, r_BPMSQ, r_BPMSQ, r_BPMSQ}, APER_TOL = {r_tol_BPM , h_tol_BPM , v_tol_BPM };
+BPMSQ.1R1.B2,APERTYPE=RECTELLIPSE, APERTURE={ r_BPMSQ, r_BPMSQ, r_BPMSQ, r_BPMSQ}, APER_TOL = {r_tol_BPM , h_tol_BPM , v_tol_BPM };
+BPMSQ.1L1.B2,APERTYPE=RECTELLIPSE, APERTURE={ r_BPMSQ, r_BPMSQ, r_BPMSQ, r_BPMSQ}, APER_TOL = {r_tol_BPM , h_tol_BPM , v_tol_BPM };
+BPMSQ.1R5.B2,APERTYPE=RECTELLIPSE, APERTURE={ r_BPMSQ, r_BPMSQ, r_BPMSQ, r_BPMSQ}, APER_TOL = {r_tol_BPM , h_tol_BPM , v_tol_BPM };
+BPMSQ.1L5.B2,APERTYPE=RECTELLIPSE, APERTURE={ r_BPMSQ, r_BPMSQ, r_BPMSQ, r_BPMSQ}, APER_TOL = {r_tol_BPM , h_tol_BPM , v_tol_BPM };
+
+! ... Q2
+MQXFB.A2R1,   APERTYPE="Q2Q3_APERTURE", APER_TOL ={r_tol_IT , h_tol_IT , v_tol_IT };
+MQXFB.B2R1,   APERTYPE="Q2Q3_APERTURE", APER_TOL ={r_tol_IT , h_tol_IT , v_tol_IT };
+MQXFB.A2L1,   APERTYPE="Q2Q3_APERTURE", APER_TOL ={r_tol_IT , h_tol_IT , v_tol_IT };
+MQXFB.B2L1,   APERTYPE="Q2Q3_APERTURE", APER_TOL ={r_tol_IT , h_tol_IT , v_tol_IT };
+MQXFB.A2R5,   APERTYPE="Q2Q3_APERTURE", APER_TOL ={r_tol_IT , h_tol_IT , v_tol_IT };
+MQXFB.B2R5,   APERTYPE="Q2Q3_APERTURE", APER_TOL ={r_tol_IT , h_tol_IT , v_tol_IT };
+MQXFB.A2L5,   APERTYPE="Q2Q3_APERTURE", APER_TOL ={r_tol_IT , h_tol_IT , v_tol_IT };
+MQXFB.B2L5,   APERTYPE="Q2Q3_APERTURE", APER_TOL ={r_tol_IT , h_tol_IT , v_tol_IT };
+
+! ... BPM2a & BPM2b (non-IP side of Q2A & Q2B)
+BPMSQ.A2R1.B1,  APERTYPE=RECTELLIPSE, APERTURE={ r_BPMSQ, r_BPMSQ, r_BPMSQ, r_BPMSQ}, APER_TOL = {r_tol_BPM , h_tol_BPM , v_tol_BPM };
+BPMSQ.A2L1.B1,  APERTYPE=RECTELLIPSE, APERTURE={ r_BPMSQ, r_BPMSQ, r_BPMSQ, r_BPMSQ}, APER_TOL = {r_tol_BPM , h_tol_BPM , v_tol_BPM };
+BPMSQ.A2R5.B1,  APERTYPE=RECTELLIPSE, APERTURE={ r_BPMSQ, r_BPMSQ, r_BPMSQ, r_BPMSQ}, APER_TOL = {r_tol_BPM , h_tol_BPM , v_tol_BPM };
+BPMSQ.A2L5.B1,  APERTYPE=RECTELLIPSE, APERTURE={ r_BPMSQ, r_BPMSQ, r_BPMSQ, r_BPMSQ}, APER_TOL = {r_tol_BPM , h_tol_BPM , v_tol_BPM };
+BPMSQ.A2R1.B2,  APERTYPE=RECTELLIPSE, APERTURE={ r_BPMSQ, r_BPMSQ, r_BPMSQ, r_BPMSQ}, APER_TOL = {r_tol_BPM , h_tol_BPM , v_tol_BPM };
+BPMSQ.A2L1.B2,  APERTYPE=RECTELLIPSE, APERTURE={ r_BPMSQ, r_BPMSQ, r_BPMSQ, r_BPMSQ}, APER_TOL = {r_tol_BPM , h_tol_BPM , v_tol_BPM };
+BPMSQ.A2R5.B2,  APERTYPE=RECTELLIPSE, APERTURE={ r_BPMSQ, r_BPMSQ, r_BPMSQ, r_BPMSQ}, APER_TOL = {r_tol_BPM , h_tol_BPM , v_tol_BPM };
+BPMSQ.A2L5.B2,  APERTYPE=RECTELLIPSE, APERTURE={ r_BPMSQ, r_BPMSQ, r_BPMSQ, r_BPMSQ}, APER_TOL = {r_tol_BPM , h_tol_BPM , v_tol_BPM };
+BPMSQ.B2R1.B1,  APERTYPE=RECTELLIPSE, APERTURE={ r_BPMSQ, r_BPMSQ, r_BPMSQ, r_BPMSQ}, APER_TOL = {r_tol_BPM , h_tol_BPM , v_tol_BPM };
+BPMSQ.B2L1.B1,  APERTYPE=RECTELLIPSE, APERTURE={ r_BPMSQ, r_BPMSQ, r_BPMSQ, r_BPMSQ}, APER_TOL = {r_tol_BPM , h_tol_BPM , v_tol_BPM };
+BPMSQ.B2R5.B1,  APERTYPE=RECTELLIPSE, APERTURE={ r_BPMSQ, r_BPMSQ, r_BPMSQ, r_BPMSQ}, APER_TOL = {r_tol_BPM , h_tol_BPM , v_tol_BPM };
+BPMSQ.B2L5.B1,  APERTYPE=RECTELLIPSE, APERTURE={ r_BPMSQ, r_BPMSQ, r_BPMSQ, r_BPMSQ}, APER_TOL = {r_tol_BPM , h_tol_BPM , v_tol_BPM };
+BPMSQ.B2R1.B2,  APERTYPE=RECTELLIPSE, APERTURE={ r_BPMSQ, r_BPMSQ, r_BPMSQ, r_BPMSQ}, APER_TOL = {r_tol_BPM , h_tol_BPM , v_tol_BPM };
+BPMSQ.B2L1.B2,  APERTYPE=RECTELLIPSE, APERTURE={ r_BPMSQ, r_BPMSQ, r_BPMSQ, r_BPMSQ}, APER_TOL = {r_tol_BPM , h_tol_BPM , v_tol_BPM };
+BPMSQ.B2R5.B2,  APERTYPE=RECTELLIPSE, APERTURE={ r_BPMSQ, r_BPMSQ, r_BPMSQ, r_BPMSQ}, APER_TOL = {r_tol_BPM , h_tol_BPM , v_tol_BPM };
+BPMSQ.B2L5.B2,  APERTYPE=RECTELLIPSE, APERTURE={ r_BPMSQ, r_BPMSQ, r_BPMSQ, r_BPMSQ}, APER_TOL = {r_tol_BPM , h_tol_BPM , v_tol_BPM };
+
+! ... Q3
+MQXFA.A3L1,    APERTYPE="Q2Q3_APERTURE", APER_TOL ={r_tol_IT , h_tol_IT , v_tol_IT };
+MQXFA.A3R1,    APERTYPE="Q2Q3_APERTURE", APER_TOL ={r_tol_IT , h_tol_IT , v_tol_IT };
+MQXFA.A3L5,    APERTYPE="Q2Q3_APERTURE", APER_TOL ={r_tol_IT , h_tol_IT , v_tol_IT };
+MQXFA.A3R5,    APERTYPE="Q2Q3_APERTURE", APER_TOL ={r_tol_IT , h_tol_IT , v_tol_IT };
+MQXFA.B3L1,    APERTYPE="Q2Q3_APERTURE", APER_TOL ={r_tol_IT , h_tol_IT , v_tol_IT };
+MQXFA.B3R1,    APERTYPE="Q2Q3_APERTURE", APER_TOL ={r_tol_IT , h_tol_IT , v_tol_IT };
+MQXFA.B3L5,    APERTYPE="Q2Q3_APERTURE", APER_TOL ={r_tol_IT , h_tol_IT , v_tol_IT };
+MQXFA.B3R5,    APERTYPE="Q2Q3_APERTURE", APER_TOL ={r_tol_IT , h_tol_IT , v_tol_IT };
+
+! ... BPM3
+BPMSQ.3R1.B1,  APERTYPE=RECTELLIPSE, APERTURE={ r_BPMSQ, r_BPMSQ, r_BPMSQ, r_BPMSQ}, APER_TOL = {r_tol_BPM , h_tol_BPM , v_tol_BPM };
+BPMSQ.3L1.B1,  APERTYPE=RECTELLIPSE, APERTURE={ r_BPMSQ, r_BPMSQ, r_BPMSQ, r_BPMSQ}, APER_TOL = {r_tol_BPM , h_tol_BPM , v_tol_BPM };
+BPMSQ.3R5.B1,  APERTYPE=RECTELLIPSE, APERTURE={ r_BPMSQ, r_BPMSQ, r_BPMSQ, r_BPMSQ}, APER_TOL = {r_tol_BPM , h_tol_BPM , v_tol_BPM };
+BPMSQ.3L5.B1,  APERTYPE=RECTELLIPSE, APERTURE={ r_BPMSQ, r_BPMSQ, r_BPMSQ, r_BPMSQ}, APER_TOL = {r_tol_BPM , h_tol_BPM , v_tol_BPM };
+BPMSQ.3R1.B2,  APERTYPE=RECTELLIPSE, APERTURE={ r_BPMSQ, r_BPMSQ, r_BPMSQ, r_BPMSQ}, APER_TOL = {r_tol_BPM , h_tol_BPM , v_tol_BPM };
+BPMSQ.3L1.B2,  APERTYPE=RECTELLIPSE, APERTURE={ r_BPMSQ, r_BPMSQ, r_BPMSQ, r_BPMSQ}, APER_TOL = {r_tol_BPM , h_tol_BPM , v_tol_BPM };
+BPMSQ.3R5.B2,  APERTYPE=RECTELLIPSE, APERTURE={ r_BPMSQ, r_BPMSQ, r_BPMSQ, r_BPMSQ}, APER_TOL = {r_tol_BPM , h_tol_BPM , v_tol_BPM };
+BPMSQ.3L5.B2,  APERTYPE=RECTELLIPSE, APERTURE={ r_BPMSQ, r_BPMSQ, r_BPMSQ, r_BPMSQ}, APER_TOL = {r_tol_BPM , h_tol_BPM , v_tol_BPM };
+
+! ... ORBIT CORRECTOR INSIDE TRIPLET
+MCBXFBH.A2R1,   APERTYPE="Q2Q3_APERTURE", APER_TOL ={r_tol_IT , h_tol_IT , v_tol_IT };
+MCBXFBH.A2L1,   APERTYPE="Q2Q3_APERTURE", APER_TOL ={r_tol_IT , h_tol_IT , v_tol_IT };
+MCBXFBH.A2R5,   APERTYPE="Q2Q3_APERTURE", APER_TOL ={r_tol_IT , h_tol_IT , v_tol_IT };
+MCBXFBH.A2L5,   APERTYPE="Q2Q3_APERTURE", APER_TOL ={r_tol_IT , h_tol_IT , v_tol_IT };
+MCBXFBH.B2R1,   APERTYPE="Q2Q3_APERTURE", APER_TOL ={r_tol_IT , h_tol_IT , v_tol_IT };
+MCBXFBH.B2L1,   APERTYPE="Q2Q3_APERTURE", APER_TOL ={r_tol_IT , h_tol_IT , v_tol_IT };
+MCBXFBH.B2R5,   APERTYPE="Q2Q3_APERTURE", APER_TOL ={r_tol_IT , h_tol_IT , v_tol_IT };
+MCBXFBH.B2L5,   APERTYPE="Q2Q3_APERTURE", APER_TOL ={r_tol_IT , h_tol_IT , v_tol_IT };
+MCBXFBV.A2R1,   APERTYPE="Q2Q3_APERTURE", APER_TOL ={r_tol_IT , h_tol_IT , v_tol_IT };
+MCBXFBV.A2L1,   APERTYPE="Q2Q3_APERTURE", APER_TOL ={r_tol_IT , h_tol_IT , v_tol_IT };
+MCBXFBV.A2R5,   APERTYPE="Q2Q3_APERTURE", APER_TOL ={r_tol_IT , h_tol_IT , v_tol_IT };
+MCBXFBV.A2L5,   APERTYPE="Q2Q3_APERTURE", APER_TOL ={r_tol_IT , h_tol_IT , v_tol_IT };
+MCBXFBV.B2R1,   APERTYPE="Q2Q3_APERTURE", APER_TOL ={r_tol_IT , h_tol_IT , v_tol_IT };
+MCBXFBV.B2L1,   APERTYPE="Q2Q3_APERTURE", APER_TOL ={r_tol_IT , h_tol_IT , v_tol_IT };
+MCBXFBV.B2R5,   APERTYPE="Q2Q3_APERTURE", APER_TOL ={r_tol_IT , h_tol_IT , v_tol_IT };
+MCBXFBV.B2L5,   APERTYPE="Q2Q3_APERTURE", APER_TOL ={r_tol_IT , h_tol_IT , v_tol_IT };
+
+! ... corrector package
+! ... MCBXV
+MCBXFAV.3R1,   APERTYPE="Q2Q3_APERTURE", APER_TOL ={r_tol_IT , h_tol_IT , v_tol_IT };
+MCBXFAV.3L1,   APERTYPE="Q2Q3_APERTURE", APER_TOL ={r_tol_IT , h_tol_IT , v_tol_IT };
+MCBXFAV.3R5,   APERTYPE="Q2Q3_APERTURE", APER_TOL ={r_tol_IT , h_tol_IT , v_tol_IT };
+MCBXFAV.3L5,   APERTYPE="Q2Q3_APERTURE", APER_TOL ={r_tol_IT , h_tol_IT , v_tol_IT };
+! ... MCBXH
+MCBXFAH.3R1,   APERTYPE="Q2Q3_APERTURE", APER_TOL ={r_tol_IT , h_tol_IT , v_tol_IT };
+MCBXFAH.3L1,   APERTYPE="Q2Q3_APERTURE", APER_TOL ={r_tol_IT , h_tol_IT , v_tol_IT };
+MCBXFAH.3R5,   APERTYPE="Q2Q3_APERTURE", APER_TOL ={r_tol_IT , h_tol_IT , v_tol_IT };
+MCBXFAH.3L5,   APERTYPE="Q2Q3_APERTURE", APER_TOL ={r_tol_IT , h_tol_IT , v_tol_IT };
+! ... MCSX.3L1
+MQSXF.3R1,    APERTYPE="Q2Q3_APERTURE", APER_TOL ={r_tol_IT , h_tol_IT , v_tol_IT };
+MQSXF.3L1,    APERTYPE="Q2Q3_APERTURE", APER_TOL ={r_tol_IT , h_tol_IT , v_tol_IT };
+MQSXF.3R5,    APERTYPE="Q2Q3_APERTURE", APER_TOL ={r_tol_IT , h_tol_IT , v_tol_IT };
+MQSXF.3L5,    APERTYPE="Q2Q3_APERTURE", APER_TOL ={r_tol_IT , h_tol_IT , v_tol_IT };
+! ... MCSX
+MCSXF.3R1,    APERTYPE="Q2Q3_APERTURE", APER_TOL ={r_tol_IT , h_tol_IT , v_tol_IT };
+MCSXF.3L1,    APERTYPE="Q2Q3_APERTURE", APER_TOL ={r_tol_IT , h_tol_IT , v_tol_IT };
+MCSXF.3R5,    APERTYPE="Q2Q3_APERTURE", APER_TOL ={r_tol_IT , h_tol_IT , v_tol_IT };
+MCSXF.3L5,    APERTYPE="Q2Q3_APERTURE", APER_TOL ={r_tol_IT , h_tol_IT , v_tol_IT };
+! ... MCTX
+MCTXF.3R1,    APERTYPE="Q2Q3_APERTURE", APER_TOL ={r_tol_IT , h_tol_IT , v_tol_IT };
+MCTXF.3L1,    APERTYPE="Q2Q3_APERTURE", APER_TOL ={r_tol_IT , h_tol_IT , v_tol_IT };
+MCTXF.3R5,    APERTYPE="Q2Q3_APERTURE", APER_TOL ={r_tol_IT , h_tol_IT , v_tol_IT };
+MCTXF.3L5,    APERTYPE="Q2Q3_APERTURE", APER_TOL ={r_tol_IT , h_tol_IT , v_tol_IT };
+! ... MCTSX
+MCTSXF.3R1,    APERTYPE="Q2Q3_APERTURE", APER_TOL ={r_tol_IT , h_tol_IT , v_tol_IT };
+MCTSXF.3L1,    APERTYPE="Q2Q3_APERTURE", APER_TOL ={r_tol_IT , h_tol_IT , v_tol_IT };
+MCTSXF.3R5,    APERTYPE="Q2Q3_APERTURE", APER_TOL ={r_tol_IT , h_tol_IT , v_tol_IT };
+MCTSXF.3L5,    APERTYPE="Q2Q3_APERTURE", APER_TOL ={r_tol_IT , h_tol_IT , v_tol_IT };
+! ... MCSSX
+MCSSXF.3R1,    APERTYPE="Q2Q3_APERTURE", APER_TOL ={r_tol_IT , h_tol_IT , v_tol_IT };
+MCSSXF.3L1,    APERTYPE="Q2Q3_APERTURE", APER_TOL ={r_tol_IT , h_tol_IT , v_tol_IT };
+MCSSXF.3R5,    APERTYPE="Q2Q3_APERTURE", APER_TOL ={r_tol_IT , h_tol_IT , v_tol_IT };
+MCSSXF.3L5,    APERTYPE="Q2Q3_APERTURE", APER_TOL ={r_tol_IT , h_tol_IT , v_tol_IT };
+! ... MCOSX
+MCOSXF.3R1,    APERTYPE="Q2Q3_APERTURE", APER_TOL ={r_tol_IT , h_tol_IT , v_tol_IT };
+MCOSXF.3L1,    APERTYPE="Q2Q3_APERTURE", APER_TOL ={r_tol_IT , h_tol_IT , v_tol_IT };
+MCOSXF.3R5,    APERTYPE="Q2Q3_APERTURE", APER_TOL ={r_tol_IT , h_tol_IT , v_tol_IT };
+MCOSXF.3L5,    APERTYPE="Q2Q3_APERTURE", APER_TOL ={r_tol_IT , h_tol_IT , v_tol_IT };
+! ... MCOX
+MCOXF.3R1,    APERTYPE="Q2Q3_APERTURE", APER_TOL ={r_tol_IT , h_tol_IT , v_tol_IT };
+MCOXF.3L1,    APERTYPE="Q2Q3_APERTURE", APER_TOL ={r_tol_IT , h_tol_IT , v_tol_IT };
+MCOXF.3R5,    APERTYPE="Q2Q3_APERTURE", APER_TOL ={r_tol_IT , h_tol_IT , v_tol_IT };
+MCOXF.3L5,    APERTYPE="Q2Q3_APERTURE", APER_TOL ={r_tol_IT , h_tol_IT , v_tol_IT };
+! ... MCDSX
+MCDSXF.3R1,    APERTYPE="Q2Q3_APERTURE", APER_TOL ={r_tol_IT , h_tol_IT , v_tol_IT };
+MCDSXF.3L1,    APERTYPE="Q2Q3_APERTURE", APER_TOL ={r_tol_IT , h_tol_IT , v_tol_IT };
+MCDSXF.3R5,    APERTYPE="Q2Q3_APERTURE", APER_TOL ={r_tol_IT , h_tol_IT , v_tol_IT };
+MCDSXF.3L5,    APERTYPE="Q2Q3_APERTURE", APER_TOL ={r_tol_IT , h_tol_IT , v_tol_IT };
+! ... MCDX
+MCDXF.3R1,    APERTYPE="Q2Q3_APERTURE", APER_TOL ={r_tol_IT , h_tol_IT , v_tol_IT };
+MCDXF.3L1,    APERTYPE="Q2Q3_APERTURE", APER_TOL ={r_tol_IT , h_tol_IT , v_tol_IT };
+MCDXF.3R5,    APERTYPE="Q2Q3_APERTURE", APER_TOL ={r_tol_IT , h_tol_IT , v_tol_IT };
+MCDXF.3L5,    APERTYPE="Q2Q3_APERTURE", APER_TOL ={r_tol_IT , h_tol_IT , v_tol_IT };
+
+! ... separation dipoles
+! ... D1
+MBXF.4L1,   APERTYPE="Q2Q3_APERTURE",   APER_TOL ={r_tol_D1 , h_tol_D1 , v_tol_D1 };
+MBXF.4R1,   APERTYPE="Q2Q3_APERTURE",   APER_TOL ={r_tol_D1 , h_tol_D1 , v_tol_D1 };
+MBXF.4L5,   APERTYPE="Q2Q3_APERTURE",   APER_TOL ={r_tol_D1 , h_tol_D1 , v_tol_D1 };
+MBXF.4R5,   APERTYPE="Q2Q3_APERTURE",   APER_TOL ={r_tol_D1 , h_tol_D1 , v_tol_D1 };
+
+
