@@ -255,6 +255,24 @@ seqedit,sequence=lhcb2;
   endedit;
 };
 
+install_ir15_b1_b2(ENAME,SPOS1,SPOS2): macro={
+  value,SPOS;
+if(bv_aux == 1){
+seqedit,sequence=lhcb1;
+  install, element=ENAMEL1.B1,at=-SPOS1,from=IP1.L1;
+  install, element=ENAMER1.B1,at= SPOS1,from=IP1;
+  install, element=ENAMEL5.B1,at=-SPOS1,from=IP5;
+  install, element=ENAMER5.B1,at= SPOS1,from=IP5;
+  endedit;
+};
+seqedit,sequence=lhcb2;
+  install, element=ENAMEL1.B2,at=-SPOS2*bv_aux,from=IP1.L1;
+  install, element=ENAMER1.B2,at= SPOS2*bv_aux,from=IP1;
+  install, element=ENAMEL5.B2,at=-SPOS2*bv_aux,from=IP5;
+  install, element=ENAMER5.B2,at= SPOS2*bv_aux,from=IP5;
+  endedit;
+};
+
 newel_ir15_b12(ENAME,PARE): macro={
  ENAMEL1.B1: PARE; ENAMEL1.B2: PARE;
  ENAMER1.B1: PARE; ENAMER1.B2: PARE;
@@ -724,7 +742,8 @@ posD2  := 157.9+deltaposD2; ! from V6.503
 !11 to fit three cavitities with 1.5 meter
 
 
-posBPMWQ  := posD2 - l.MBRD/2  -  0.8055;
+posBPMWQ1  := posD2 - l.MBRD/2  - 2.541 - L.BPMWQ/2;
+posBPMWQ2  := posD2 - l.MBRD/2  - 2.541 - 3*L.BPMWQ/2;
 posMCBRDV := posD2 + l.MBRD/2 + l.MCBRD/2 + 0.48;
 posMCBRDH := posMCBRDV + l.MCBRD/2 + l.MCBRD/2 + 0.48;
 
@@ -790,7 +809,7 @@ value, ad2.l1,l.MBRD,ad2.l1/l.MBRD*scale;
 
 ! D2
 exec,install_ir15_b12(MBRD.4,   posD2    );
-exec,install_ir15_b12(BPMWQ.4,  posBPMWQ );
+exec,install_ir15_b1_b2(BPMWQ.4,  posBPMWQ1, posBPMWQ2);
 exec,install_ir15_b12(MCBRDV.4, posMCBRDV);
 exec,install_ir15_b12(MCBRDH.4, posMCBRDH);
 
@@ -1313,14 +1332,14 @@ l.TCLMA=0.5;
 l.TCLMB=1.0;
 l.TCLMC=1.0;
 
-posTCLMA    := posD2 - l.MBRD/2 - 1.831   - l.TCLMA/2;
+posTCLMA    := posD2 - l.MBRD/2 - 1.841   - l.TCLMA/2 ;
 !posTCLMB.4  := posQ4 - l.MQYY/2 - dist_TM - l.TCLMB/2;
 posTCLMB.4  := posMCBYY.A4 - l.MQYY/2 - dist_TM - l.TCLMB/2;
 
 
 !posTCLMB.5  := posQ5 - l.MQYL/2 - dist_TM - l.TCLMB/2;
 !posTCLMB.6  := posQ6 - l.MQML/2 - dist_TM - l.TCLMB/2;
-posTCLMB.5  := posMCBY.A5 - l.MCBY/2 - 1.835 - l.TCLMB/2;
+posTCLMB.5  := posMCBY.A5 - l.MCBY/2 - 1.835 - 0.450 - l.TCLMB/2;
 posTCLMC.6C := posQ6      - l.MQML/2 - 2.673 - 0.250 - l.TCLMC/2;
 posTCLMC.6Q := posQ6      - l.MQML/2 - 2.066 - 0.250 - l.TCLMC/2;
 
@@ -1352,10 +1371,10 @@ endedit;
 
 seqedit,sequence=lhcb2;
 ! .... MCBC.6
-install,element=TCLMC.6L1.B2, at=(-posTCLMC.6Q)*bv_aux, from= IP1.L1;
-install,element=TCLMC.6R1.B2, at=( posTCLMC.6C)*bv_aux, from= IP1;
-install,element=TCLMC.6L5.B2, at=(-posTCLMC.6C)*bv_aux, from= IP5;
-install,element=TCLMC.6R5.B2, at=( posTCLMC.6Q)*bv_aux, from= IP5;
+install,element=TCLMC.6L1.B2, at=(-posTCLMC.6C)*bv_aux, from= IP1.L1;
+install,element=TCLMC.6R1.B2, at=( posTCLMC.6Q)*bv_aux, from= IP1;
+install,element=TCLMC.6L5.B2, at=(-posTCLMC.6Q)*bv_aux, from= IP5;
+install,element=TCLMC.6R5.B2, at=( posTCLMC.6C)*bv_aux, from= IP5;
 endedit;
 
 
@@ -1370,15 +1389,15 @@ if (L.TAXN==0) {L.TAXN=3.5;};
 ! v6.503  10.425 ,   7.335 ,   5.655 ,   3.445 ,   2.0805
 ! slhc 1.275 closer to D2
 posTAN    := posD2    - l.MBRD/2 -  L.TAXN/2 - 8.020;
-posTCTV   := posTAN   + L.TAXN/2 +  l.TCT/2  + 0.567;!720
-posTCTH   := posTCTV  + l.TCT/2  +  l.TCT/2  + 0.695;
-posTCL.4  := posTCTH  + l.TCT/2  +  l.TCT/2  + 0.595;
-posTCL.5  := posTCLMB.5  - l.TCLMB/2 - l.TCT/2 - 0.761;
-posTCL.6C := posTCLMC.6C - l.TCLMC/2 - l.TCT/2 - 0.761;
-posTCL.6Q := posTCLMC.6Q - l.TCLMC/2 - l.TCT/2 - 0.761;
+posTCTV   := posTAN   + L.TAXN/2 +  l.TCT/2  + 0.567-0.08;!720
+posTCTH   := posTCTV  + l.TCT/2  +  l.TCT/2  + 0.695-0.075;
+posTCL.4  := posTCTH  + l.TCT/2  +  l.TCT/2  + 0.595-0.07;
+posTCL.5  := posTCLMB.5  - l.TCLMB/2 - l.TCT/2 - 0.760;
+posTCL.6C := posTCLMC.6C - l.TCLMC/2 - l.TCT/2 - 0.760;
+posTCL.6Q := posTCLMC.6Q - l.TCLMC/2 - l.TCT/2 - 0.760;
 
-posTCTV.5 := posQ5+l.MQY+2.600+l.TCT/2;
-posTCTH.5 := posTCTV.5  +1.030+l.TCT/2;
+posTCTV.5 := posQ5+l.MQY/2 + 2.600+l.TCT/2;
+posTCTH.5 := posTCTV.5  +1.000+l.TCT;
 
 
 value,posTAN;
@@ -1411,9 +1430,8 @@ TCTV.5L1.B1: TCTV; TCTV.5L5.B1: TCTV;
 TCTH.5R1.B2: TCTH; TCTH.5R5.B2: TCTH;
 TCTV.5R1.B2: TCTV; TCTV.5R5.B2: TCTV;
 
-posBPTX=posQ4+l.MQYY/2+3.313;
-
-
+l.BPTXaux=0.285;
+posBPTX=posQ4+l.MQYY/2+3.313+l.BPTXaux/2;
 
 
 
