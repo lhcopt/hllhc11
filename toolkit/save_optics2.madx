@@ -246,6 +246,8 @@ print,text="cphi_IR2:=cos(phi_IR2*pi/180.);sphi_IR2:=sin(phi_IR2*pi/180.);";
 print,text="cphi_IR5:=cos(phi_IR5*pi/180.);sphi_IR5:=sin(phi_IR5*pi/180.);";
 print,text="cphi_IR8:=cos(phi_IR8*pi/180.);sphi_IR8:=sin(phi_IR8*pi/180.);";
 
+print,text="on_disp=0;";
+
 printf,text="on_sol_atlas=%g;",value=on_sol_atlas;
 printf,text="on_alice=%g; on_sol_alice=%g;",value=on_alice,on_sol_atlas;
 printf,text="on_sol_cms=%g;",value=on_sol_atlas;
@@ -345,32 +347,32 @@ exec, print_orbit_knob_ip(ACBacbn1Vacbn2.sideirnB2,s,c,irn);
 
 
 print_optics_triplet(irn): macro={
-printf,text="kqx.lirn   := %20.10e;",value=kqx.lirn;
-printf,text="ktqx1.lirn := %20.10e;",value=ktqx1.lirn;
-printf,text="ktqx2.lirn := %20.10e;",value=ktqx2.lirn;
-printf,text="kqx.rirn   := %20.10e;",value=kqx.rirn;
-printf,text="ktqx1.rirn := %20.10e;",value=ktqx1.rirn;
-printf,text="ktqx2.rirn := %20.10e;",value=ktqx2.rirn;
+printf,text="kqx.lirn   = %20.10e;",value=kqx.lirn;
+printf,text="ktqx1.lirn = %20.10e;",value=ktqx1.lirn;
+printf,text="ktqx2.lirn = %20.10e;",value=ktqx2.lirn;
+printf,text="kqx.rirn   = %20.10e;",value=kqx.rirn;
+printf,text="ktqx1.rirn = %20.10e;",value=ktqx1.rirn;
+printf,text="ktqx2.rirn = %20.10e;",value=ktqx2.rirn;
 };
 
 
 print_optics_triplet_hl(irn): macro={
-printf,text="kqx1.lirn  := %20.10e;",value=kqx1.lirn;
-printf,text="kqx2a.lirn := %20.10e;",value=kqx2a.lirn;
-printf,text="kqx2b.lirn := %20.10e;",value=kqx2b.lirn;
-printf,text="kqx3.lirn  := %20.10e;",value=kqx3.lirn;
-printf,text="kqx1.rirn  := %20.10e;",value=kqx1.rirn;
-printf,text="kqx2a.rirn := %20.10e;",value=kqx2a.rirn;
-printf,text="kqx2b.rirn := %20.10e;",value=kqx2b.rirn;
-printf,text="kqx3.rirn  := %20.10e;",value=kqx3.rirn;
+printf,text="kqx1.lirn  = %20.10e;",value=kqx1.lirn;
+printf,text="kqx2a.lirn = %20.10e;",value=kqx2a.lirn;
+printf,text="kqx2b.lirn = %20.10e;",value=kqx2b.lirn;
+printf,text="kqx3.lirn  = %20.10e;",value=kqx3.lirn;
+printf,text="kqx1.rirn  = %20.10e;",value=kqx1.rirn;
+printf,text="kqx2a.rirn = %20.10e;",value=kqx2a.rirn;
+printf,text="kqx2b.rirn = %20.10e;",value=kqx2b.rirn;
+printf,text="kqx3.rirn  = %20.10e;",value=kqx3.rirn;
 };
 
 
 print_optics_quad(ntype,nquad,irn): macro={
-printf,text="Kntypenquad.LirnB1   := %20.10e ;",value=Kntypenquad.LirnB1;
-printf,text="Kntypenquad.LirnB2   := %20.10e ;",value=Kntypenquad.LirnB2;
-printf,text="Kntypenquad.RirnB1   := %20.10e ;",value=Kntypenquad.RirnB1;
-printf,text="Kntypenquad.RirnB2   := %20.10e ;",value=Kntypenquad.RirnB2;
+printf,text="Kntypenquad.LirnB1   = %20.10e ;",value=Kntypenquad.LirnB1;
+printf,text="Kntypenquad.LirnB2   = %20.10e ;",value=Kntypenquad.LirnB2;
+printf,text="Kntypenquad.RirnB1   = %20.10e ;",value=Kntypenquad.RirnB1;
+printf,text="Kntypenquad.RirnB2   = %20.10e ;",value=Kntypenquad.RirnB2;
 };
 
 
@@ -392,12 +394,12 @@ exec,print_optics_quad(QT,13,irn);
 
 
 print_optics_coll(irn): macro={
-printf,text="KQ4.LRirn   := %20.10e ;",value=KQ4.LRirn;
-printf,text="KQT4.Lirn   := %20.10e ;",value=KQT4.Lirn;
-printf,text="KQT4.Rirn   := %20.10e ;",value=KQT4.Rirn;
-printf,text="KQ5.LRirn   := %20.10e ;",value=KQ5.LRirn;
-printf,text="KQT5.Lirn   := %20.10e ;",value=KQT5.Lirn;
-printf,text="KQT5.Rirn   := %20.10e ;",value=KQT5.Rirn;
+printf,text="KQ4.LRirn   = %20.10e ;",value=KQ4.LRirn;
+printf,text="KQT4.Lirn   = %20.10e ;",value=KQT4.Lirn;
+printf,text="KQT4.Rirn   = %20.10e ;",value=KQT4.Rirn;
+printf,text="KQ5.LRirn   = %20.10e ;",value=KQ5.LRirn;
+printf,text="KQT5.Lirn   = %20.10e ;",value=KQT5.Lirn;
+printf,text="KQT5.Rirn   = %20.10e ;",value=KQT5.Rirn;
 exec,print_optics_quad(Q,6,irn);
 exec,print_optics_quad(QTL,7,irn);
 exec,print_optics_quad(QTL,8,irn);
@@ -434,14 +436,14 @@ exec,print_orbit_knob_ip(acbcv6.r1b1,s,c,1);
 exec,print_orbit_knob_ip(acbch6.r1b2,c,s,1);
 print,text="";
 print,text=" !***IR1 Crab Cavities***";
-printf,text="ahcrab_l1b1   := %20.10e ;",value=ahcrab_l1b1;
-printf,text="ahcrab_l1b2   := %20.10e ;",value=ahcrab_l1b2;
-printf,text="avcrab_l1b1   := %20.10e ;",value=avcrab_l1b1;
-printf,text="avcrab_l1b2   := %20.10e ;",value=avcrab_l1b2;
-printf,text="ahcrab_r1b1   := %20.10e ;",value=ahcrab_r1b1;
-printf,text="ahcrab_r1b2   := %20.10e ;",value=ahcrab_r1b2;
-printf,text="avcrab_r1b1   := %20.10e ;",value=avcrab_r1b1;
-printf,text="avcrab_r1b2   := %20.10e ;",value=avcrab_r1b2;
+printf,text="ahcrab_l1b1   = %20.10e ;",value=ahcrab_l1b1;
+printf,text="ahcrab_l1b2   = %20.10e ;",value=ahcrab_l1b2;
+printf,text="avcrab_l1b1   = %20.10e ;",value=avcrab_l1b1;
+printf,text="avcrab_l1b2   = %20.10e ;",value=avcrab_l1b2;
+printf,text="ahcrab_r1b1   = %20.10e ;",value=ahcrab_r1b1;
+printf,text="ahcrab_r1b2   = %20.10e ;",value=ahcrab_r1b2;
+printf,text="avcrab_r1b1   = %20.10e ;",value=avcrab_r1b1;
+printf,text="avcrab_r1b2   = %20.10e ;",value=avcrab_r1b2;
 print,text="";
 
 
@@ -470,14 +472,14 @@ exec,print_orbit_knob_ip(acbcv6.r5b1,s,c,5);
 exec,print_orbit_knob_ip(acbch6.r5b2,c,s,5);
 print,text="";
 print,text=" !***IR5 Crab Cavities***";
-printf,text="ahcrab_l5b1   := %20.10e ;",value=ahcrab_l5b1;
-printf,text="ahcrab_l5b2   := %20.10e ;",value=ahcrab_l5b2;
-printf,text="avcrab_l5b1   := %20.10e ;",value=avcrab_l5b1;
-printf,text="avcrab_l5b2   := %20.10e ;",value=avcrab_l5b2;
-printf,text="ahcrab_r5b1   := %20.10e ;",value=ahcrab_r5b1;
-printf,text="ahcrab_r5b2   := %20.10e ;",value=ahcrab_r5b2;
-printf,text="avcrab_r5b1   := %20.10e ;",value=avcrab_r5b1;
-printf,text="avcrab_r5b2   := %20.10e ;",value=avcrab_r5b2;
+printf,text="ahcrab_l5b1   = %20.10e ;",value=ahcrab_l5b1;
+printf,text="ahcrab_l5b2   = %20.10e ;",value=ahcrab_l5b2;
+printf,text="avcrab_l5b1   = %20.10e ;",value=avcrab_l5b1;
+printf,text="avcrab_l5b2   = %20.10e ;",value=avcrab_l5b2;
+printf,text="ahcrab_r5b1   = %20.10e ;",value=ahcrab_r5b1;
+printf,text="ahcrab_r5b2   = %20.10e ;",value=ahcrab_r5b2;
+printf,text="avcrab_r5b1   = %20.10e ;",value=avcrab_r5b1;
+printf,text="avcrab_r5b2   = %20.10e ;",value=avcrab_r5b2;
 print,text="";
 
 print,text=" !***IR2 Optics***";
@@ -547,10 +549,10 @@ printf,text="famil.A78   = %20.10e ;",value=famil.A78;
 };
 
 print_arc_weak_trim(famil,trim,bim): macro={
-printf,text="famil.A81bim:= %20.10e ;",value=famil.A81bim;
-printf,text="famil.A12bim:= %20.10e ;",value=famil.A12bim;
-printf,text="famil.A45bim:= %20.10e ;",value=famil.A45bim;
-printf,text="famil.A56bim:= %20.10e ;",value=famil.A56bim;
+printf,text="famil.A81bim= %20.10e ;",value=famil.A81bim;
+printf,text="famil.A12bim= %20.10e ;",value=famil.A12bim;
+printf,text="famil.A45bim= %20.10e ;",value=famil.A45bim;
+printf,text="famil.A56bim= %20.10e ;",value=famil.A56bim;
 printf,text="famil.A23bim:= %20.10e +trim.bim ;",value=famil.A23bim;
 printf,text="famil.A34bim:= %20.10e +trim.bim ;",value=famil.A34bim;
 printf,text="famil.A67bim:= %20.10e +trim.bim ;",value=famil.A67bim;
