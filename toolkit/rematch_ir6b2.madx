@@ -68,7 +68,9 @@ constraint,range=mqml.10l6.b2,betx< 175.2+epsap+1;
  vary,name=kq9.r6b2,    step=1.0E-6, lower= qtlimit3*scmin, upper= qtlimit3;
  vary,name=kq10.r6b2,   step=1.0E-6, lower=-qtlimit3, upper=-qtlimit3*scmin;
  vary,name=kqtl11.r6b2, step=1.0E-6, lower=-qtlimit4*300./550., upper=qtlimit4*300./550.;
+if (is_thin==0){
  vary,name=kqt12.r6b2,  step=1.0E-6, lower=-qtlimit5, upper= qtlimit5;
+};
  vary,name=kqt13.r6b2,  step=1.0E-6, lower=-qtlimit5, upper= qtlimit5;
 !lmdif,calls=200,tolerance=1.e-21;
 jacobian,calls=jac_calls, tolerance=jac_tol, bisec=jac_bisec;
