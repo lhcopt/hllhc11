@@ -8,10 +8,15 @@ match_inj_tunes=1;
 exec,crossing_disable;
 match_on_aperture=0; jac_calls=10; bisec=3; tol=1e-16;
 call,file="toolkit/rematch_ir15_b12.madx";
+if (is_thin==0){
 match_on_aperture=1; epsap=-1;
 call,file="toolkit/rematch_ir15_b12.madx";
 match_on_aperture=1; epsap=-0;
 call,file="toolkit/rematch_ir15_b12.madx";
+} else {
+match_on_aperture=0; jac_calls=30; bisec=3; tol=1e-16;
+call,file="toolkit/rematch_ir15_b12.madx";
+};
 
 
 value,tarir15b12;
