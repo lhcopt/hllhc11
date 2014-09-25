@@ -82,7 +82,7 @@ posmarke=15.0;
 !posmarks=163.0; ! include D2
 !posmarks=184;   ! include Q4
 !posmarks=240;    ! include Q6
-posmarks=260;    ! include Q6 DFBAJ
+posmarks=259;    ! include Q6 DFBAJ DFBAI
 
 if(bv_aux == 1){
 seqedit, sequence=lhcb1;
@@ -842,7 +842,7 @@ MCBYYH : HKICKER,   L := l.MCBYY ; ! for orbit correction separate
 MCBYYV : VKICKER,   L := l.MCBYY ; ! for orbit correction separate
 BPMQA : MONITOR,    L := l.BPMQA ; ! bpm in Q4
 
-Kmax_MCBYYH=4.5; !MCBY  2.5T at 4.5k
+Kmax_MCBYYH=4.5; ! MCBY in LHC is 2.5T at 4.5K
 Kmax_MCBYYV=4.5;
 
 
@@ -1187,35 +1187,58 @@ MQY.B5L6.B2: MQY, K1 := -kq5.l6b2*bv_aux,polarity=-1;
 MQY.B5R6.B2: MQY, K1 := -kq5.r6b2*bv_aux,polarity=-1;
 posQ5IR6=208.2;
 posQ5BIR6=posQ5IR6+3.781;
-posBPMQ5IR6=posQ5BIR6+2.718;
-posMCBYQ5IR6=posQ5BIR6+2.257;
+!posBPMQ5IR6=posQ5BIR6+2.718;
+!posMCBYQ5IR6=posQ5BIR6+2.257;
 
-value,posQ5IR6,posQ5BIR6,posBPMQ5IR6,posMCBYQ5IR6;
+! Proposal from Herve 21/8/2014
+! BPMY.5R6 = about 205.482 from=IP6;
+! MQY.A5R6 = 208.142 from IP6;
+! MQY.B5R6 = 211.928 from IP6;
+! MCBY.5R6 = 214.291 from IP6;
+! BPMY.5L6 = about -214.588 from=IP6;
+! MQY.B5L6 = -208.142 from IP6;
+! MQY.A5L6 = -211.928 from IP6;
+! MCBY.5L6 = -205.579 from IP6;
+
+!posQ5IR6=208.142;
+!posQ5BIR6=posQ5IR6+3.786;
+dposBPMQ5IR6=2.660;
+dposMCBYQ5IR6=2.363;
+
+value,posQ5IR6,posQ5BIR6,dposBPMQ5IR6,dposMCBYQ5IR6;
 
 if(bv_aux == 1){
 seqedit,sequence=lhcb1;
 remove,element=BPMYA.5L6.B1; remove,element=MCBYV.5R6.B1;
+remove,element=BPMYB.5R6.B1; remove,element=MCBYH.5L6.B1;
 remove,element=MQY.5L6.B1; remove,element=MQY.5R6.B1;
 remove,element=MQY.B5R6.B1; remove,element=MQY.B5L6.B1;
-install,element=MQY.5L6.B1,  at=-posQ5IR6    ,from=IP6;
-install,element=MQY.B5L6.B1, at=-posQ5BIR6   ,from=IP6;
-install,element=BPMYA.5L6.B1,at=-posBPMQ5IR6 ,from=IP6;
-install,element=MQY.5R6.B1,  at=+posQ5IR6    ,from=IP6;
-install,element=MQY.B5R6.B1, at=+posQ5BIR6   ,from=IP6;
-install,element=MCBYV.5R6.B1,at=+posMCBYQ5IR6,from=IP6;
+install,element=BPMYA.5L6.B1, at=-posQ5BIR6-dposBPMQ5IR6, from=IP6;
+install,element=MQY.B5L6.B1 , at=-posQ5BIR6, from=IP6;
+install,element=MQY.5L6.B1  , at=-posQ5IR6 , from=IP6;
+install,element=MCBYH.5L6.B1, at=-posQ5IR6+dposMCBYQ5IR6, from=IP6;
+install,element=BPMYB.5R6.B1, at= posQ5IR6-dposBPMQ5IR6, from=IP6;
+install,element=MQY.5R6.B1  , at=+posQ5IR6    ,from=IP6;
+install,element=MQY.B5R6.B1 , at=+posQ5BIR6   ,from=IP6;
+install,element=MCBYV.5R6.B1, at=+posQ5BIR6+dposMCBYQ5IR6,from=IP6;
 endedit;
 };
 
 seqedit,sequence=lhcb2;
 remove,element=BPMYB.5L6.B2; remove,element=MCBYH.5R6.B2;
+remove,element=BPMYA.5R6.B2; remove,element=MCBYV.5L6.B2;
+remove,element=BPMYA.5R6.B2; remove,element=MCBYV.5L6.B2;
+remove,element=BPMYB.5L6.B2; remove,element=MCBYH.5R6.B2;
 remove,element=MQY.5L6.B2; remove,element=MQY.5R6.B2;
 remove,element=MQY.B5R6.B2; remove,element=MQY.B5L6.B2;
-install,element=MQY.5L6.B2,  at=(-posQ5IR6    )*bv_aux,from=IP6;
-install,element=MQY.B5L6.B2 ,at=(-posQ5BIR6   )*bv_aux,from=IP6;
-install,element=BPMYB.5L6.B2,at=(-posBPMQ5IR6 )*bv_aux,from=IP6;
-install,element=MQY.5R6.B2  ,at=(+posQ5IR6    )*bv_aux,from=IP6;
-install,element=MQY.B5R6.B2 ,at=(+posQ5BIR6   )*bv_aux,from=IP6;
-install,element=MCBYH.5R6.B2,at=(+posMCBYQ5IR6)*bv_aux,from=IP6;
+install,element=BPMYB.5L6.B2, at=bv_aux*(-posQ5BIR6-dposBPMQ5IR6), from=IP6;
+install,element=MQY.B5L6.B2 , at=bv_aux*(-posQ5BIR6), from=IP6;
+install,element=MQY.5L6.B2  , at=bv_aux*(-posQ5IR6) , from=IP6;
+install,element=MCBYV.5L6.B2, at=bv_aux*(-posQ5IR6+dposMCBYQ5IR6), from=IP6;
+install,element=BPMYA.5R6.B2, at=bv_aux*( posQ5IR6-dposBPMQ5IR6), from=IP6;
+install,element=MQY.5R6.B2  , at=bv_aux*(+posQ5IR6)    ,from=IP6;
+install,element=MQY.B5R6.B2 , at=bv_aux*(+posQ5BIR6)   ,from=IP6;
+install,element=MCBYH.5R6.B2, at=bv_aux*(+posQ5BIR6+dposMCBYQ5IR6),from=IP6;
 endedit;
 
 
