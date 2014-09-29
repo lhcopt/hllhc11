@@ -3,11 +3,11 @@ system,"ln -fns /afs/cern.ch/eng/lhc/optics/HLLHCV1.1/ slhc";
 system,"ln -fns /afs/cern.ch/eng/lhc/optics/V6.503 db5";
 
 
-mylhcbeam=4; ! For Beam 1
+mylhcbeam=1; ! For Beam 1
 !mylhcbeam=2; ! For Beam 2
 !mylhcbeam=4; ! For Beam 4
 
-is_thin=1; ! For thick optics
+is_thin=0; ! For thick optics
 !is_thin=1; ! For thin optics
 
 

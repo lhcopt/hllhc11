@@ -9,8 +9,7 @@
 !   exec,load_lastoptics(ir5);
 
 make_opticstbl_ir5hl(ir5hl):macro={
-  if (on_opticstbl_ir5hl==0){
-    create,table=ir5hl_log_str,column=
+    create,table=ir5hl,column=
     kqx1.r5,kqx2a.r5,kqx2b.r5,kqx3.r5,
     kqx1.l5,kqx2a.l5,kqx2b.l5,kqx3.l5,
     kq4.l5b1,kq5.l5b1,kq6.l5b1,kq7.l5b1,kq8.l5b1,kq9.l5b1,kq10.l5b1,
@@ -42,11 +41,10 @@ make_opticstbl_ir5hl(ir5hl):macro={
     scl,sch,bmaxds,sc79,betx_marke,bety_marke,
     ir5q4sym,ir5q5sym,imb,
     timestamp;
-    on_opticstbl_ir5hl=1;value,on_opticstbl_ir5hl;
-  };
+    print,text="Creating table ir5hl";
 };
 
-make_opticstbl_ir5:macro={
+make_opticstbl_ir5(ir5):macro={
   if (on_opticstbl_ir5==0){
     create,table=ir5_log_str,column=
     kqx.r5,ktqx1.r5,ktqx2.r5,
@@ -77,8 +75,38 @@ make_opticstbl_ir5:macro={
   };
 };
 
+make_opticstbl_ir1(ir1):macro={
+  if (on_opticstbl_ir1==0){
+    create,table=ir1_log_str,column=
+    kqx.r1,ktqx1.r1,ktqx2.r1,
+    kqx.l1,ktqx1.l1,ktqx2.l1,
+    kq4.l1b1,kq5.l1b1,kq6.l1b1,kq7.l1b1,kq8.l1b1,kq9.l1b1,kq10.l1b1,
+    kqtl11.l1b1,kqt12.l1b1,kqt13.l1b1,
+    kq4.r1b1,kq5.r1b1,kq6.r1b1,kq7.r1b1,kq8.r1b1,kq9.r1b1,kq10.r1b1,
+    kqtl11.r1b1,kqt12.r1b1,kqt13.r1b1,
+    kq4.l1b2,kq5.l1b2,kq6.l1b2,kq7.l1b2,kq8.l1b2,kq9.l1b2,kq10.l1b2,
+    kqtl11.l1b2,kqt12.l1b2,kqt13.l1b2,
+    kq4.r1b2,kq5.r1b2,kq6.r1b2,kq7.r1b2,kq8.r1b2,kq9.r1b2,kq10.r1b2,
+    kqtl11.r1b2,kqt12.r1b2,kqt13.r1b2,
+    betxip5b1,betyip5b1,alfxip5b1,alfyip5b1,dxip5b1,dpxip5b1,
+    betxip5b2,betyip5b2,alfxip5b2,alfyip5b2,dxip5b2,dpxip5b2,
+    muxip5b1,muyip5b1, muxip5b2,muyip5b2,
+    muxip5b1_l,muyip5b1_l,muxip5b1_r,muyip5b1_r,
+    muxip5b2_l,muyip5b2_l,muxip5b2_r,muyip5b2_r,
+    acbxv1.l1,acbxv1.r1,acbxv2.l1,acbxv2.r1,acbxv3.l1,acbxv3.r1,
+    acbxh1.l1,acbxh1.r1,acbxh2.l1,acbxh2.r1,acbxh3.l1,acbxh3.r1,
+    acbyvs4.r1b1,acbyvs4.l1b1,acbcv5.l1b1,acbcv6.r1b1,
+    acbyhs4.r1b1,acbyhs4.l1b1,acbch5.r1b1,acbch6.l1b1,
+    acbyvs4.r1b2,acbyvs4.l1b2,acbcv5.r1b2,acbcv6.l1b2,
+    acbyhs4.r1b2,acbyhs4.l1b2,acbch5.l1b2,acbch6.r1b2,
+    acbyh4.l1b1,acbyh4.r1b2,acbyv4.r1b1,acbyv4.l1b2,acbch7.r1b1,acbch7.l1b2,
+    tarir1b1,tarir1b2,
+    timestamp;
+    on_opticstbl_ir1=1;value,on_opticstbl_ir1;
+  };
+};
 
-make_opticstbl_ir8:macro={
+make_opticstbl_ir8(ir8):macro={
   if (on_opticstbl_ir8==0){
     create,table=ir8_log_str,column=
     kqx.r8,ktqx1.r8,ktqx2.r8,
@@ -109,18 +137,7 @@ make_opticstbl_ir8:macro={
   };
 };
 
-make_orbittbl_ir2:macro={
-  if (on_orbittbl_ir2==0){
-    create,table=ir2_log_orb,column=
-    betxip5b1,betyip5b1, betxip5b2,betyip5b2,
-    timestamp;
-    on_orbittbl_ir2=1;value,on_orbittbl_ir2;
-  };
-};
-
-
-
-make_opticstbl_ir2:macro={
+make_opticstbl_ir2(ir2):macro={
   if (on_opticstbl_ir2==0){
     create,table=ir2_log_str,column=
     kqx.r2,ktqx1.r2,ktqx2.r2,
@@ -153,7 +170,7 @@ make_opticstbl_ir2:macro={
 };
 
 
-make_opticstbl_ir4:macro={
+make_opticstbl_ir4(ir4):macro={
   if (on_opticstbl_ir4==0){
     create,table=ir4_log_str,column=
     kq5.l4b1,kq6.l4b1,kq7.l4b1,kq8.l4b1,kq9.l4b1,kq10.l4b1,
@@ -174,7 +191,7 @@ make_opticstbl_ir4:macro={
   };
 };
 
-make_opticstbl_ir6:macro={
+make_opticstbl_ir6(ir6):macro={
   if (on_opticstbl_ir6==0){
     create,table=ir6_log_str,column=
     kq5.l6b1,kq6.l6b1,kq7.l6b1,kq8.l6b1,kq9.l6b1,kq10.l6b1,
@@ -195,7 +212,7 @@ make_opticstbl_ir6:macro={
   };
 };
 
-make_opticstbl_ir3:macro={
+make_opticstbl_ir3(ir3):macro={
   if (on_opticstbl_ir3==0){
     create,table=ir3_log_str,column=
     kq4.lr3,kqt4.l3,kqt4.r3,kq5.lr3,kqt5.l3,kqt5.r3,
@@ -212,7 +229,7 @@ make_opticstbl_ir3:macro={
   };
 };
 
-make_opticstbl_ir7:macro={
+make_opticstbl_ir7(ir3):macro={
   if (on_opticstbl_ir7==0){
     create,table=ir7_log_str,column=
     kq4.lr7,kqt4.l7,kqt4.r7,kq5.lr7,kqt5.l7,kqt5.r7,
@@ -232,7 +249,7 @@ make_opticstbl_ir7:macro={
 read_opticstbl(ir5): macro={
   if (on_opticstbl_ir5==0){
     readmytable,table=ir5_log_strold,file=ir5_log_str.tfs;
-    exec,make_opticstbl_ir5;
+    exec,make_opticstbl_ir5(ir5);
     ! copy in the new one
     iii=1; iiistop=table(ir5_log_strold,tablelength);
     while(iii<=iiistop){
@@ -277,9 +294,4 @@ get_timestamp: macro={
 system, "date '+timestamp=%s;' >tmp_ttstamp";
 call,file=tmp_ttstamp;
 system, "rm tmp_ttstamp";
-};
-
-
-print_2(aaa,bbb): macro={
- print,text="aaa bbb";
 };

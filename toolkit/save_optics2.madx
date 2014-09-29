@@ -585,10 +585,10 @@ printf,text="KQTF.B1 =  %20.10e ;",value=KQTF.B1;
 printf,text="KQTD.B1 =  %20.10e ;",value=KQTD.B1;
 printf,text="KQTF.B2 =  %20.10e ;",value=KQTF.B2;
 printf,text="KQTD.B2 =  %20.10e ;",value=KQTD.B2;
-exec,print_arc_weak_trim(KQF,KQTF,B1);
-exec,print_arc_weak_trim(KQF,KQTF,B2);
-exec,print_arc_weak_trim(KQD,KQTD,B1);
-exec,print_arc_weak_trim(KQD,KQTD,B2);
+exec,print_arc_weak_trim(KQTF,KQTF,B1);
+exec,print_arc_weak_trim(KQTF,KQTF,B2);
+exec,print_arc_weak_trim(KQTD,KQTD,B1);
+exec,print_arc_weak_trim(KQTD,KQTD,B2);
 print,text="";
 
 print,text=" !KSF/KSD";
