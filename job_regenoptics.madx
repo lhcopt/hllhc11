@@ -134,6 +134,7 @@ if (tarendoframp+tarir37b12+tarcrossing<1e-15){
 exec,check_ip(b1); exec,check_ip(b2);
 };
 exec,regen_endoframp(endoframp);
+exec,regen_endoframp(vdm30);
 
 
 

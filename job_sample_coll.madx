@@ -7,7 +7,7 @@ mylhcbeam=1; ! For Beam 1
 !mylhcbeam=2; ! For Beam 2
 !mylhcbeam=4; ! For Beam 4
 
-is_thin=0; ! For thick optics
+is_thin=1; ! For thick optics
 !is_thin=1; ! For thin optics
 
 
