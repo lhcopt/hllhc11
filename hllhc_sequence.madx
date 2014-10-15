@@ -256,7 +256,7 @@ seqedit,sequence=lhcb2;
 };
 
 install_ir15_b1_b2(ENAME,SPOS1,SPOS2): macro={
-  value,SPOS;
+  value,SPOS1,SPOS2;
 if(bv_aux == 1){
 seqedit,sequence=lhcb1;
   install, element=ENAMEL1.B1,at=-SPOS1,from=IP1.L1;
@@ -653,16 +653,17 @@ exec,install_ir15_cmn(MBXF.4,  posD1);
 ! BMPSQW is between TAS and Q1
 l.BPMSQ = 0.22;
 l.BPMSQW = 0.285;
-BPMSQ:  MONITOR,    L := l.BPMSQ;  ! bpm in the triplets'
-BPMSQW:  MONITOR,   L := l.BPMSQW;  ! bpm in the triplets'
+BPMSQ:  MONITOR,    L := l.BPMSQ;  ! bpm in the triplets
+BPMSQT:  MONITOR,    L := l.BPMSQ; ! bpm in the triplets with W insert
+BPMSQW:  MONITOR,   L := l.BPMSQW; ! bpm in the triplets warm
 
 !posBPMW  := 21.475;  !from V6.503
-posBPMW  := posQ1a - l.Q13/2  - l.BPMSQW/2 - 1.350;
-posBPM1  := posQ1b + l.Q13/2. + l.BPMSQ/2 + 0.745;
-posBPM2a := posQ2a + l.MQX/2. + l.BPMSQ/2 + 0.745;
-posBPM2b := posMCBXFBb + l.MCBXFB/2. + l.BPMSQ/2 + 0.745;
-posBPM3a := posQ3b + l.Q13/2. + l.BPMSQ/2 + 0.745;
-posBPM3b := posMCSSXF + l.MCSSXF/2 + l.BPMSQ/2 + 0.2865;
+posBPMW  := posQ1a - l.Q13/2  - l.BPMSQW/2 - 1.350-0.16;
+posBPM1  := posQ1b + l.Q13/2. + l.BPMSQ/2 + 0.745+0.345;
+posBPM2a := posQ2a + l.MQX/2. + l.BPMSQ/2 + 0.745+0.345;
+posBPM2b := posMCBXFBb + l.MCBXFB/2. + l.BPMSQ/2 + 0.745+0.345;
+posBPM3a := posMCBXFA  - l.MCBXFA/2. - l.BPMSQ/2 - 0.55;
+posBPM3b := posMCSSXF + l.MCSSXF/2 + l.BPMSQ/2 + 0.2865+0.28997;
 posBPM4  := posD1 + l.MBXF/2 + l.BPMSQ/2 + 1.820;
 
 value, posBPMW,posBPM1,posBPM2a,posBPM2b,posBPM3a,posBPM3b;
@@ -676,18 +677,18 @@ BPMSQ.1L1.B1  : BPMSQ;BPMSQ.1R1.B1  : BPMSQ;
 BPMSQ.1L5.B1  : BPMSQ;BPMSQ.1R5.B1  : BPMSQ;
 BPMSQ.1L1.B2  : BPMSQ;BPMSQ.1R1.B2  : BPMSQ;
 BPMSQ.1L5.B2  : BPMSQ;BPMSQ.1R5.B2  : BPMSQ;
-BPMSQ.A2L1.B1 : BPMSQ;BPMSQ.A2R1.B1 : BPMSQ;
-BPMSQ.A2L5.B1 : BPMSQ;BPMSQ.A2R5.B1 : BPMSQ;
-BPMSQ.A2L1.B2 : BPMSQ;BPMSQ.A2R1.B2 : BPMSQ;
-BPMSQ.A2L5.B2 : BPMSQ;BPMSQ.A2R5.B2 : BPMSQ;
-BPMSQ.B2L1.B1 : BPMSQ;BPMSQ.B2R1.B1 : BPMSQ;
-BPMSQ.B2L5.B1 : BPMSQ;BPMSQ.B2R5.B1 : BPMSQ;
-BPMSQ.B2L1.B2 : BPMSQ;BPMSQ.B2R1.B2 : BPMSQ;
-BPMSQ.B2L5.B2 : BPMSQ;BPMSQ.B2R5.B2 : BPMSQ;
-BPMSQ.A3L1.B1 : BPMSQ;BPMSQ.A3R1.B1 : BPMSQ;
-BPMSQ.A3L5.B1 : BPMSQ;BPMSQ.A3R5.B1 : BPMSQ;
-BPMSQ.A3L1.B2 : BPMSQ;BPMSQ.A3R1.B2 : BPMSQ;
-BPMSQ.A3L5.B2 : BPMSQ;BPMSQ.A3R5.B2 : BPMSQ;
+BPMSQT.A2L1.B1 : BPMSQT;BPMSQT.A2R1.B1 : BPMSQT;
+BPMSQT.A2L5.B1 : BPMSQT;BPMSQT.A2R5.B1 : BPMSQT;
+BPMSQT.A2L1.B2 : BPMSQT;BPMSQT.A2R1.B2 : BPMSQT;
+BPMSQT.A2L5.B2 : BPMSQT;BPMSQT.A2R5.B2 : BPMSQT;
+BPMSQT.B2L1.B1 : BPMSQT;BPMSQT.B2R1.B1 : BPMSQT;
+BPMSQT.B2L5.B1 : BPMSQT;BPMSQT.B2R5.B1 : BPMSQT;
+BPMSQT.B2L1.B2 : BPMSQT;BPMSQT.B2R1.B2 : BPMSQT;
+BPMSQT.B2L5.B2 : BPMSQT;BPMSQT.B2R5.B2 : BPMSQT;
+BPMSQT.A3L1.B1 : BPMSQT;BPMSQT.A3R1.B1 : BPMSQT;
+BPMSQT.A3L5.B1 : BPMSQT;BPMSQT.A3R5.B1 : BPMSQT;
+BPMSQT.A3L1.B2 : BPMSQT;BPMSQT.A3R1.B2 : BPMSQT;
+BPMSQT.A3L5.B2 : BPMSQT;BPMSQT.A3R5.B2 : BPMSQT;
 BPMSQ.B3L1.B1 : BPMSQ;BPMSQ.B3R1.B1 : BPMSQ;
 BPMSQ.B3L5.B1 : BPMSQ;BPMSQ.B3R5.B1 : BPMSQ;
 BPMSQ.B3L1.B2 : BPMSQ;BPMSQ.B3R1.B2 : BPMSQ;
@@ -700,9 +701,9 @@ BPMSQ.4L5.B2  : BPMSQ;BPMSQ.4R5.B2  : BPMSQ;
 ! BPMS
 exec,install_ir15_b12(BPMSQW.1,  posBPMW   );
 exec,install_ir15_b12(BPMSQ.1,   posBPM1   );
-exec,install_ir15_b12(BPMSQ.A2,  posBPM2a  );
-exec,install_ir15_b12(BPMSQ.B2,  posBPM2b  );
-exec,install_ir15_b12(BPMSQ.A3,  posBPM3a  );
+exec,install_ir15_b12(BPMSQT.A2,  posBPM2a  );
+exec,install_ir15_b12(BPMSQT.B2,  posBPM2b  );
+exec,install_ir15_b12(BPMSQT.A3,  posBPM3a  );
 exec,install_ir15_b12(BPMSQ.B3,  posBPM3b  );
 exec,install_ir15_b12(BPMSQ.4,   posBPM4   );
 
@@ -742,10 +743,10 @@ posD2  := 157.9+deltaposD2; ! from V6.503
 !11 to fit three cavitities with 1.5 meter
 
 
-posBPMWQ1  := posD2 - l.MBRD/2  - 2.541 - L.BPMWQ/2;
-posBPMWQ2  := posD2 - l.MBRD/2  - 2.541 - 3*L.BPMWQ/2;
-posMCBRDV := posD2 + l.MBRD/2 + l.MCBRD/2 + 0.48;
-posMCBRDH := posMCBRDV + l.MCBRD/2 + l.MCBRD/2 + 0.48;
+posBPMWQ1  := posD2 - l.MBRD/2 - L.BPMWQ/2 - 2.541 + 0.01;
+posBPMWQ2  := posD2 - l.MBRD/2 - L.BPMWQ/2 - 2.541 + 0.01;
+posMCBRDA := posD2 + l.MBRD/2 + l.MCBRD/2 + 0.48;
+posMCBRDB := posMCBRDA + l.MCBRD/2 + l.MCBRD/2 + 0.48;
 
 
 
@@ -810,9 +811,32 @@ value, ad2.l1,l.MBRD,ad2.l1/l.MBRD*scale;
 ! D2
 exec,install_ir15_b12(MBRD.4,   posD2    );
 exec,install_ir15_b1_b2(BPMWQ.4,  posBPMWQ1, posBPMWQ2);
-exec,install_ir15_b12(MCBRDV.4, posMCBRDV);
-exec,install_ir15_b12(MCBRDH.4, posMCBRDH);
+!exec,install_ir15_b12(MCBRDV.4, posMCBRDV);
+!exec,install_ir15_b12(MCBRDH.4, posMCBRDH);
 
+if(bv_aux == 1){
+seqedit,sequence=lhcb1;
+install,element=MCBRDV.4L1.B1, at=-posMCBRDA, from= IP1.L1;
+install,element=MCBRDH.4R1.B1, at= posMCBRDA, from= IP1;
+install,element=MCBRDV.4L5.B1, at=-posMCBRDA, from= IP5;
+install,element=MCBRDH.4R5.B1, at= posMCBRDA, from= IP5;
+install,element=MCBRDH.4L1.B1, at=-posMCBRDB, from= IP1.L1;
+install,element=MCBRDV.4R1.B1, at= posMCBRDB, from= IP1;
+install,element=MCBRDH.4L5.B1, at=-posMCBRDB, from= IP5;
+install,element=MCBRDV.4R5.B1, at= posMCBRDB, from= IP5;
+endedit;
+};
+
+seqedit,sequence=lhcb2;
+install,element=MCBRDH.4L1.B2, at=-posMCBRDA*bv_aux, from= IP1.L1;
+install,element=MCBRDV.4R1.B2, at= posMCBRDA*bv_aux, from= IP1;
+install,element=MCBRDH.4L5.B2, at=-posMCBRDA*bv_aux, from= IP5;
+install,element=MCBRDV.4R5.B2, at= posMCBRDA*bv_aux, from= IP5;
+install,element=MCBRDV.4L1.B2, at=-posMCBRDB*bv_aux, from= IP1.L1;
+install,element=MCBRDH.4R1.B2, at= posMCBRDB*bv_aux, from= IP1;
+install,element=MCBRDV.4L5.B2, at=-posMCBRDB*bv_aux, from= IP5;
+install,element=MCBRDH.4R5.B2, at= posMCBRDB*bv_aux, from= IP5;
+endedit;
 
 
 !===============================================
@@ -829,10 +853,10 @@ l.BPMQA= 0.100;
 
 posQ4       :=169.553+deltaPosQ4;  !nominal
 posQ4       :=169.553+deltaPosQ4;  !nominal
-posBPMQA.4  :=posQ4 + 2.676; !2.676 BPMYA.4L5.B1:BPMYA BPMYA.4L5.B2:BPMYA
+!posBPMQA.4  :=posQ4 + 2.676; !2.676 BPMYA.4L5.B1:BPMYA BPMYA.4L5.B2:BPMYA
 !posMCBYY.B4 :=posQ4 - l.MQYY/2 - 0.822; !same as nominal note that in IR2-8-6 distance can
 !posMCBYY.4  :=posQ4 - l.MQYY/2 - 2.118; !be better
-posBPMQA.4  :=posQ4 + l.MQYY/2 + 0.86515 -  l.BPMQA/2;!
+posBPMQA.4  :=posQ4 + l.MQYY/2 + 0.86515 -  l.BPMQA/2 +0.18685;!
 
 posMCBYY.B4 :=posQ4 - l.MQYY/2 - l.MCBYY/2   -0.35;
 posMCBYY.A4 :=posQ4 - l.MQYY/2 - 3*l.MCBYY/2 -0.35-0.48;
@@ -991,17 +1015,26 @@ MCBYV.A5L1.B2:MCBYV, KICK:= -acbyvs5.l1b2*bv_aux, polarity=+1;
 
 posQ5  := 196.490 + deltaPosQ5; !+ .073 in drawings
 
-posBPMY.5  :=posQ5 + 2.676; !2.676 BPMYA.4L5.B1:BPMYA BPMYA.4L5.B2:BPMYA
+posBPMY.5  :=posQ5 + 2.676 -0.002; !2.676 BPMYA.4L5.B1:BPMYA BPMYA.4L5.B2:BPMYA
 posMCBY.B5 :=posQ5 - 2.522; !same as nominal note that in IR2-8-6 distance can
 posMCBY.5  :=posQ5 - 3.818; !be better
 posMCBY.A5 :=posQ5 - 5.114;
 
+BPMYA.5R1.B1:BPMYA;
+BPMYA.5L5.B1:BPMYA;
+BPMYA.5R5.B1:BPMYA;
+BPMYA.5L1.B1:BPMYA;
+BPMYA.5R1.B2:BPMYA;
+BPMYA.5L5.B2:BPMYA;
+BPMYA.5R5.B2:BPMYA;
+BPMYA.5L1.B2:BPMYA;
 
 
-exec,newel_ir15_b12(BPMQB.5,BPMQB);
+!exec,newel_ir15_b12(BPMQB.5,BPMQB);
+!exec,newel_ir15_b12(BPMYA.5,BPMYA);
 
 exec,install_ir15_b12(MQY.5,    posQ5 );
-exec,install_ir15_b12(BPMQB.5,    posBPMY.5 );
+exec,install_ir15_b12(BPMYA.5,    posBPMY.5 );
 
 value,posMCBYY.B5,posMCBYY.5,posMCBYY.A5;
 
@@ -1060,7 +1093,8 @@ dposMCBC  = 3.042;
 dposBPM   = 3.145; !3.145
 
 
-exec,newel_ir15_b12(BPMQC.6,BPMQC);
+
+!exec,newel_ir15_b12(BPMQC.6,BPMQC);
 
 exec,install_ir15_b12(MQML.6,    posQ6 );
 
@@ -1071,10 +1105,10 @@ exec,install_ir15_b12(MQML.6,    posQ6 );
 if(bv_aux == 1){
 seqedit,sequence=lhcb1;
 ! .... BPM.6
-install,element=BPMQC.6L1.B1, at=-posQ6-dposBPM, from= IP1.L1;
-install,element=BPMQC.6R1.B1,at= posQ6-dposBPM, from= IP1;
-install,element=BPMQC.6L5.B1, at=-posQ6+dposBPM, from= IP5;
-install,element=BPMQC.6R5.B1,at= posQ6+dposBPM, from= IP5;
+install,element=BPM.6L1.B1, at=-posQ6-dposBPM, from= IP1.L1;
+install,element=BPMR.6R1.B1,at= posQ6-dposBPM, from= IP1;
+install,element=BPM.6L5.B1, at=-posQ6+dposBPM, from= IP5;
+install,element=BPMR.6R5.B1,at= posQ6+dposBPM, from= IP5;
 
 ! .... MCBC.6
 install,element=MCBCH.6L1.B1, at=-posQ6+dposMCBC, from= IP1.L1;
@@ -1086,10 +1120,10 @@ endedit;
 
 seqedit,sequence=lhcb2;
 ! .... BPM.6
-install,element=BPMQC.6L1.B2,at=(-posQ6-dposBPM)*bv_aux, from= IP1.L1;
-install,element=BPMQC.6R1.B2, at=( posQ6-dposBPM)*bv_aux, from= IP1;
-install,element=BPMQC.6L5.B2,at=(-posQ6+dposBPM)*bv_aux, from= IP5;
-install,element=BPMQC.6R5.B2, at=( posQ6+dposBPM)*bv_aux, from= IP5;
+install,element=BPMR.6L1.B2,at=(-posQ6-dposBPM)*bv_aux, from= IP1.L1;
+install,element=BPM.6R1.B2, at=( posQ6-dposBPM)*bv_aux, from= IP1;
+install,element=BPMR.6L5.B2,at=(-posQ6+dposBPM)*bv_aux, from= IP5;
+install,element=BPM.6R5.B2, at=( posQ6+dposBPM)*bv_aux, from= IP5;
 
 ! .... MCBC.6
 install,element=MCBCV.6L1.B2, at=(-posQ6+dposMCBC)*bv_aux, from= IP1.L1;
@@ -1355,7 +1389,7 @@ l.TCLMA=0.5;
 l.TCLMB=1.0;
 l.TCLMC=1.0;
 
-posTCLMA    := posD2 - l.MBRD/2 - 1.841   - l.TCLMA/2 ;
+posTCLMA    := posD2 - l.MBRD/2 - 1.841   - l.TCLMA/2 + 0.01;
 !posTCLMB.4  := posQ4 - l.MQYY/2 - dist_TM - l.TCLMB/2;
 posTCLMB.4  := posMCBYY.A4 - l.MQYY/2 - dist_TM - l.TCLMB/2;
 
@@ -1412,7 +1446,7 @@ if (L.TAXN==0) {L.TAXN=3.5;};
 ! v6.503  10.425 ,   7.335 ,   5.655 ,   3.445 ,   2.0805
 ! slhc 1.275 closer to D2
 posTAN    := posD2    - l.MBRD/2 -  L.TAXN/2 - 8.020;
-posTCTV   := posTAN   + L.TAXN/2 +  l.TCT/2  + 0.567-0.08;!720
+posTCTV   := posTAN   + L.TAXN/2 +  l.TCT/2  + 0.567-0.08+0.01;!720
 posTCTH   := posTCTV  + l.TCT/2  +  l.TCT/2  + 0.695-0.075;
 posTCL.4  := posTCTH  + l.TCT/2  +  l.TCT/2  + 0.595-0.07;
 posTCL.5  := posTCLMB.5  - l.TCLMB/2 - l.TCT/2 - 0.760;
@@ -1454,7 +1488,21 @@ TCTH.5R1.B2: TCTH; TCTH.5R5.B2: TCTH;
 TCTV.5R1.B2: TCTV; TCTV.5R5.B2: TCTV;
 
 l.BPTXaux=0.285;
-posBPTX=posQ4+l.MQYY/2+3.313+l.BPTXaux/2;
+posBPTX=posQ4+l.MQYY/2+3.313+l.BPTXaux/2+0.1425;
+
+
+APWL.5R5.B1: APWL; APWL.5R5.B2: APWL;
+APWL.5L5.B1: APWL; APWL.5L5.B2: APWL;
+APWL.5R1.B1: APWL; APWL.5R1.B2: APWL;
+APWL.5L1.B1: APWL; APWL.5L1.B2: APWL;
+
+L.APWLaux=0.6;
+posAPWL1=posQ4+l.MQYY/2+4.75+L.APWLaux/2;
+posAPWL2=posQ4+l.MQYY/2+4.75+3*L.APWLaux/2;
+
+exec,install_ir15_b1_b2(APWL.5,  posAPWL1, posAPWL2);
+
+
 
 
 
