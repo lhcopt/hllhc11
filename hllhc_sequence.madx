@@ -811,32 +811,33 @@ value, ad2.l1,l.MBRD,ad2.l1/l.MBRD*scale;
 ! D2
 exec,install_ir15_b12(MBRD.4,   posD2    );
 exec,install_ir15_b1_b2(BPMWQ.4,  posBPMWQ1, posBPMWQ2);
-!exec,install_ir15_b12(MCBRDV.4, posMCBRDV);
-!exec,install_ir15_b12(MCBRDH.4, posMCBRDH);
+exec,install_ir15_b12(MCBRDV.4, posMCBRDA);
+exec,install_ir15_b12(MCBRDH.4, posMCBRDB);
 
-if(bv_aux == 1){
-seqedit,sequence=lhcb1;
-install,element=MCBRDV.4L1.B1, at=-posMCBRDA, from= IP1.L1;
-install,element=MCBRDH.4R1.B1, at= posMCBRDA, from= IP1;
-install,element=MCBRDV.4L5.B1, at=-posMCBRDA, from= IP5;
-install,element=MCBRDH.4R5.B1, at= posMCBRDA, from= IP5;
-install,element=MCBRDH.4L1.B1, at=-posMCBRDB, from= IP1.L1;
-install,element=MCBRDV.4R1.B1, at= posMCBRDB, from= IP1;
-install,element=MCBRDH.4L5.B1, at=-posMCBRDB, from= IP5;
-install,element=MCBRDV.4R5.B1, at= posMCBRDB, from= IP5;
-endedit;
-};
-
-seqedit,sequence=lhcb2;
-install,element=MCBRDH.4L1.B2, at=-posMCBRDA*bv_aux, from= IP1.L1;
-install,element=MCBRDV.4R1.B2, at= posMCBRDA*bv_aux, from= IP1;
-install,element=MCBRDH.4L5.B2, at=-posMCBRDA*bv_aux, from= IP5;
-install,element=MCBRDV.4R5.B2, at= posMCBRDA*bv_aux, from= IP5;
-install,element=MCBRDV.4L1.B2, at=-posMCBRDB*bv_aux, from= IP1.L1;
-install,element=MCBRDH.4R1.B2, at= posMCBRDB*bv_aux, from= IP1;
-install,element=MCBRDV.4L5.B2, at=-posMCBRDB*bv_aux, from= IP5;
-install,element=MCBRDH.4R5.B2, at= posMCBRDB*bv_aux, from= IP5;
-endedit;
+! new orientation
+!if(bv_aux == 1){
+!seqedit,sequence=lhcb1;
+!install,element=MCBRDV.4L1.B1, at=-posMCBRDA, from= IP1.L1;
+!install,element=MCBRDH.4R1.B1, at= posMCBRDA, from= IP1;
+!install,element=MCBRDV.4L5.B1, at=-posMCBRDA, from= IP5;
+!install,element=MCBRDH.4R5.B1, at= posMCBRDA, from= IP5;
+!install,element=MCBRDH.4L1.B1, at=-posMCBRDB, from= IP1.L1;
+!install,element=MCBRDV.4R1.B1, at= posMCBRDB, from= IP1;
+!install,element=MCBRDH.4L5.B1, at=-posMCBRDB, from= IP5;
+!install,element=MCBRDV.4R5.B1, at= posMCBRDB, from= IP5;
+!endedit;
+!};
+!
+!seqedit,sequence=lhcb2;
+!install,element=MCBRDH.4L1.B2, at=-posMCBRDA*bv_aux, from= IP1.L1;
+!install,element=MCBRDV.4R1.B2, at= posMCBRDA*bv_aux, from= IP1;
+!install,element=MCBRDH.4L5.B2, at=-posMCBRDA*bv_aux, from= IP5;
+!install,element=MCBRDV.4R5.B2, at= posMCBRDA*bv_aux, from= IP5;
+!install,element=MCBRDV.4L1.B2, at=-posMCBRDB*bv_aux, from= IP1.L1;
+!install,element=MCBRDH.4R1.B2, at= posMCBRDB*bv_aux, from= IP1;
+!install,element=MCBRDV.4L5.B2, at=-posMCBRDB*bv_aux, from= IP5;
+!install,element=MCBRDH.4R5.B2, at= posMCBRDB*bv_aux, from= IP5;
+!endedit;
 
 
 !===============================================
