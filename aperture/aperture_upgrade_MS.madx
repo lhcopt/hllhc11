@@ -3,7 +3,7 @@
 ! 15mm assume to adjust b.s. and cold bore in the new D2/Q4, 5mm for the capillary
 ! H b.s. orientation for D2
 ! change of orientation for the Q5/Q4 b.s. according to Q4 polarity 
-! change of TAN aperture (ellipse instead of circle) and aperture sep. according to actual D1/D2 disTAXNe
+! change of TAN aperture (ellipse instead of circle) and aperture sep. according to actual D1/D2 distance
 ! 2011/12/06 updated with new names, adding new elements for SLHC3.1
 ! missing corrector package in Q10
 ! 2012/04/23 adding tolerenances for D2, Q4, Q5 and relative correctors and bpms
@@ -11,8 +11,8 @@
 ! 2012/07/13 adding crab cavities
 ! 2012/11/07 new default settings  (r, h, v) in mm
 ! Ground motion in the triplet (0.6, 0, 0)
-! Ground motion in the rest  (0.84, 0.36)  from JBJ, LHC reprort 1007
-! Fiducialization for MQ     (0, 0.9, 0.6) from JBJ, LHC reprort 1007
+! Ground motion in the rest  (0.84, 0.36)  from JBJ, LHC report 1007
+! Fiducialization for MQ     (0, 0.9, 0.6) from JBJ, LHC report 1007
 ! IT    (0.6 , 0,  , 0) +  (0.0, 1  , 1  ) = (0.6 ,    1,   1)
 ! D1/D2 (0.84, 0.36, 0) +  (0.0, 1  , 1  ) = (0.84, 1.36, 1  )
 ! Q4/Q5 (0.84, 0.36, 0) +  (0.0, 0.9, 0.6) = (0.84, 1.26, 0.6)
@@ -96,6 +96,12 @@ value,xx1,yy1,xx2,yy2;
 system,"rm mcbrd_aperture";assign, echo="mcbrd_aperture";
 exec,write_OCTAGON($xx1,$yy1,$xx2,$yy2);
 assign, echo=terminal;
+
+r_D2=r_D2/1000;
+g_D2=g_D2/1000;
+r_MCBRD=r_MCBRD/1000;
+g_MCBRD=g_MCBRD/1000;
+
 
 exec,aperture_2in1_def(MBRD.4,d2_aperture,
           r_D2,g_D2,angle1_D2,angle2_D2,r_tol_D2 , h_tol_D2 , v_tol_D2);
