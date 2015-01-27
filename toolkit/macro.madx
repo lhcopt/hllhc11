@@ -3744,4 +3744,44 @@ exec phasearc(7,8,78,BIM);
 exec phasearc(8,1,81,BIM);
 };
 
+print_vcrab: macro={
+v_crabh.l1b1=ahcrab_l1b1*nrj*1e9*1e-6;
+v_crabh.r1b1=ahcrab_r1b1*nrj*1e9*1e-6;
+v_crabh.l5b1=ahcrab_l5b1*nrj*1e9*1e-6;
+v_crabh.r5b1=ahcrab_r5b1*nrj*1e9*1e-6;
+v_crabh.l1b2=ahcrab_l1b2*nrj*1e9*1e-6;
+v_crabh.r1b2=ahcrab_r1b2*nrj*1e9*1e-6;
+v_crabh.l5b2=ahcrab_l5b2*nrj*1e9*1e-6;
+v_crabh.r5b2=ahcrab_r5b2*nrj*1e9*1e-6;
+
+v_crabv.l1b1=avcrab_l1b1*nrj*1e9*1e-6;
+v_crabv.r1b1=avcrab_r1b1*nrj*1e9*1e-6;
+v_crabv.l5b1=avcrab_l5b1*nrj*1e9*1e-6;
+v_crabv.r5b1=avcrab_r5b1*nrj*1e9*1e-6;
+v_crabv.l1b2=avcrab_l1b2*nrj*1e9*1e-6;
+v_crabv.r1b2=avcrab_r1b2*nrj*1e9*1e-6;
+v_crabv.l5b2=avcrab_l5b2*nrj*1e9*1e-6;
+v_crabv.r5b2=avcrab_r5b2*nrj*1e9*1e-6;
+
+
+value,v_crabh.l1b1;
+value,v_crabh.l1b2;
+value,v_crabh.r1b1;
+value,v_crabh.r1b2;
+
+value,v_crabh.l5b1;
+value,v_crabh.l5b2;
+value,v_crabh.r5b1;
+value,v_crabh.r5b2;
+
+value,v_crabv.l1b1;
+value,v_crabv.l1b2;
+value,v_crabv.r1b1;
+value,v_crabv.r1b2;
+
+value,v_crabv.l5b1;
+value,v_crabv.l5b2;
+value,v_crabv.r5b1;
+value,v_crabv.r5b2;};
+
 
