@@ -95,7 +95,7 @@ calc_triplet(bxs,bys): macro= {
 
 mk_triplet(bxs,bys,grad,posq4,betxq4,betyq4): macro={
 
-d12=dq1q2a; d22=dq2aq2b;d23=dq2bq3;lq1=dq1aq1b;
+d12=dq1q2a; d22=dq2aq2b;d23=dq2bq3;lq1=dq1aq1b; lq2=dq2222;
 
 
 imbmax=1;
@@ -112,12 +112,12 @@ select,flag=twiss,column=name,s,l,angle,k1l,hkick,vkick,kick,betx,bety,alfx,alfy
 
 
 !bxs=0.60; !bys=0.60; !grad=100;
-!betxq4=700; !betyq4=1200; 
+!betxq4=700; !betyq4=1200;
 brho=7e12/clight; k=grad/brho;
 !if (grad>=120 ) { l1=7.0; l2=6; };
 !if (grad>=400 ) { l1=4.2; l2=4.2; };
 
-lstar=23;
+!lstar=23;
 
 l1=7.145; l2=6.735;
 if (grad<120 )  { l1=9.145; l2=7.735; };
@@ -132,8 +132,8 @@ use_macro,name=calc_triplet(bxs,bys);
 constraint, expr= bq3max = imbmax*bq2max;
 constraint, expr= betxend  =betxq4;
 constraint, expr= betyend  =betyq4;
-constraint, expr= 1e5*alfxend    >2e5;
-constraint, expr= 1e5*alfyend    >2e5;
+!constraint, expr= 1e5*alfxend    >2e5;
+!constraint, expr= 1e5*alfyend    >2e5;
 jacobian,calls=60,tolerance=1e-14,bisec=9;
 endmatch;
 
@@ -153,61 +153,52 @@ jacobian,calls=60,tolerance=1e-14,bisec=9;
 endmatch;
 };
 
+
 if (tar>1e-10){return;};
 
 bq3orig=bq3max;
 
-l1=round(l1*100)/100;
-l2=round(l2*100)/100;
-l3=round(l3*100)/100;
-d12=round(d12*100)/100;
-d22=round(d22*100)/100;
-d23=round(d23*100)/100;
+l1=round(l1*500)/500;
+l2=round(l2*500)/500;
+l3=round(l3*500)/500;
+d12=round(d12*500)/500;
+d22=round(d22*500)/500;
+d23=round(d23*500)/500;
 
 
-match,use_macro;
-vary,name=k1,upper=k;
-vary,name=k2,upper=k;
-vary,name=k3,upper=k;
-use_macro,name=calc_triplet(bxs,bys);
-constraint, expr= bq3max = imbmax*bq2max;
-constraint, expr= betxend  =betxq4;
-constraint, expr= betyend  =betyq4;
-constraint, expr= 1e5*alfxend    >2e5;
-constraint, expr= 1e5*alfyend    >2e5;
-jacobian,calls=60,tolerance=1e-14,bisec=9;
-endmatch;
+!match,use_macro;
+!vary,name=k1,upper=k;
+!vary,name=k2,upper=k;
+!vary,name=k3,upper=k;
+!use_macro,name=calc_triplet(bxs,bys);
+!constraint, expr= bq3max = imbmax*bq2max;
+!constraint, expr= betxend  =betxq4;
+!constraint, expr= betyend  =betyq4;
+!constraint, expr= 1e5*alfxend    >2e5;
+!constraint, expr= 1e5*alfyend    >2e5;
+!jacobian,calls=60,tolerance=1e-14,bisec=9;
+!endmatch;
 
-match,use_macro;
-vary,name=k1,upper=k;
-vary,name=k2,upper=k;
-vary,name=k3,upper=k;
-use_macro,name=calc_triplet(bxs,bys);
-constraint, expr= bq3max = imbmax*bq2max;
-constraint, expr= betxend  =betxq4;
-constraint, expr= betyend  =betyq4;
-constraint, expr= 1e5*alfxend    >2e5;
-constraint, expr= 1e5*alfyend    >2e5;
-jacobian,calls=60,tolerance=1e-14,bisec=9;
-endmatch;
 
 l.mqxl:=l1;l.mqx:=l2;
-dq1q2a:=d12;dq2aq2b:=d22;dq2bq3:=d23;dq1aq1b=lq1;
+dq1q2a:=d12;dq2aq2b:=d22;dq2bq3:=d23;dq1aq1b=lq1; dq2222=lq2;
 kqx1.l1 =-k1;  kqx1.r1=k1;  kqx1.l5=-k1;  kqx1.r5=k1;
 kqx2a.l1=-k2; kqx2a.r1=k2; kqx2a.l5=-k2; kqx2a.r5=k2;
 kqx2b.l1=-k2; kqx2b.r1=k2; kqx2b.l5=-k2; kqx2b.r5=k2;
 kqx3.l1 =-k3;  kqx3.r1=k3;  kqx3.l5=-k3;  kqx3.r5=k3;
 exec,calc_triplet(bxs,bys);
 g1=kqx1.r1*brho;g2=kqx2a.r1*brho; g3=kqx3.r5*brho;
+!value,lstar;
 value,g1,g2,g3;
-totlen:=lstar+l1+d12+2*l2+d22+d23+l3+4*lq1;
-show,l.mqxl,l.mqx,totlen;
-value,l.mqxl,l.mqx,dq1q2a,dq2aq2b,dq2bq3,lq1,totlen;
-value,bq3orig,bq3max;
-value,bq2a1,bq2a2,bq2b1,bq2b2,bq31,bq32;
-value,alfxend;
-value,alfyend;
-value,bq3max*bxs;
+totlen:=lstar+l1+d12+2*l2+d22+d23+l3+4*lq1+2*lq2;
+!show,l.mqxl,l.mqx,totlen;
+value,lstar,l.mqxl,l.mqx,dq1q2a,dq2aq2b,dq2bq3,lq1,lq2,totlen;
+!value,bq3orig
+value,bq3max;
+!value,bq2a1,bq2a2,bq2b1,bq2b2,bq31,bq32;
+!value,alfxend;
+!value,alfyend;
+!value,bq3max*bxs;
 };
 
 calc_aperture(bxs,bys,dsep,cangle,psep):macro={

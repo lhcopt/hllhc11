@@ -166,7 +166,8 @@ CIRCLE  = 2;
 RECTELL = 3;
 REGOCTA = 4; ! default
 REGOCTATOLL = 5;
-if (bs_type==0){  bs_type=4;};
+if (bs_type==0){ bs_type= REGOCTA; };
+if (ap_mqx==0){ ap_mqx=150; };
 
 if (bs_type == OCTAGON)
 {
@@ -264,6 +265,8 @@ if (bs_type == REGOCTATOLL)
 
 };
 
+value,bs_type,ap_mqx;
+return;
 
 
 ! Author J. Miles based on preliminary data from N. Kos, P.Fessia, R. Jones 17/02/2009
@@ -280,7 +283,6 @@ if (bs_type == REGOCTATOLL)
 ! Round aperture model for TAS-BPM-D1
 ! Polygon shape for IT-CP
 
-ap_mqx=150; bs_type=4;
 r_TAS   := 0.0270;          ! was 24 mm in slhcv1 and 25 mm in slhcv2 and 30 mm in slhc3, hllhc1.1
 r_BPMSQW:= ap_mqx/2000;          ! was 60 mm in slhcv1 and slhcv2
 r_BPMSQ := ap_mqx/2000;          ! was 60 mm in slhcv1 and slhcv2

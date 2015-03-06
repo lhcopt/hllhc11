@@ -1,0 +1,102 @@
+option, warn,info;
+system,"ln -fns /afs/cern.ch/eng/lhc/optics/HLLHCV1.1/ slhc";
+system,"ln -fns /afs/cern.ch/eng/lhc/optics/V6.503 db5";
+
+option,-echo,-info,-warn;
+Option, -echo,-warn,-info;
+REAL CONST l.TAN   = 3.7  ;REAL CONST l.TANAL = l.TAN;
+REAL CONST l.TANAR = l.TAN;REAL CONST l.TANC  = l.TAN;
+REAL CONST l.TCT   = 1.0;REAL CONST l.TCTH  = l.TCT;REAL CONST l.TCTVA = l.TCT;
+call,file="db5/V6.5.seq";
+Option, -echo,warn,-info;
+
+call,file="slhc/toolkit/macro.madx";
+call,file="slhc/hllhc_sequence.madx";
+call,   file="db5/aperture/aperture.b1.madx";
+call,   file="db5/aperture/aperture.b2.madx";
+call,   file="db5/aperture/aper_tol.b1.madx";
+call,   file="db5/aperture/aper_tol.b2.madx";
+call,file="slhc/aperture/aperture_upgrade_MS.madx";
+call,file="slhc/aperture/aperture_upgrade_IT.madx";
+
+
+exec,mk_beam(7000);
+call,file="slhc/opt_round.madx";
+exec,check_ip(b1); exec,check_ip(b2);
+
+return;
+
+exec,crossing_enable;
+
+! n1 method design report
+emittance_norm=3.75e-6;
+apbbeat=1.1;
+halor=8.4; halox=7.3; haloy=7.3;
+DParcx=0.273; DParcy=0.273;
+
+! 2014 updated parameters
+emittance_norm=3.5e-6;
+apbbeat=1.1;
+halor=6; halox=6; haloy=6;
+DParcx=0.10; DParcy=0.10;
+COmax=0.002; dPmax=0.0002; VMAXI=30; SPECIF=7;
+
+value,COmax,dPmax,emittance_norm,apbbeat,halor,halox,haloy,DParcx,DParcy;
+
+system, "cp db5/aperture/offset.ip*b*.tfs  .";
+system, "cp slhc/aperture/offset.ip*b*.tfs .";
+
+
+seqedit,sequence=lhcb1;flatten;cycle,start=s.ds.l1.b1;flatten;endedit;
+
+
+use,sequence=lhcb1;
+select,flag=twiss,clear;
+select,flag=twiss,column=name,keyword,parent,kmax,kmin,calib,polarity,
+       s,l,lrad,kick,hkick,vkick,angle,
+       k0l,k1l,k2l,k3l,k4l,k5l,k0sl,k1sl,k2sl,k3sl,k4sl,k5sl,
+       x,y,px,py,betx,bety,alfx,alfy,mux,muy,dx,dy,dpx,dpy,
+       apertype,aper_1,aper_2,aper_3,aper_4,rtol,xtol,ytol,
+      range=s.ds.l1.b1/e.ds.r1.b1;
+twiss,file=result/twiss_ir1b1.tfs;
+
+select,flag=aperture,clear;
+select,flag=aperture,column=name,keyword,parent,
+   s,x,y,px,py,betx,bety,alfx,alfy,mux,muy,dx,dy,dpx,dpy,
+   n1,apertype,aper_1,aper_2,aper_3,aper_4,rtol,xtol,ytol,
+   k0l,k1l,k2l,k3l,k4l,k5l,k0sl,k1sl,k2sl,k3sl,k4sl,k5sl;
+aperture,range=s.ds.l1.b1/e.ds.r1.b1,
+         offsetelem=./offset.IP1.b1.tfs,
+         cor=COmax, dp=dPmax, spec=SPECIF,interval=1.0,
+         exn=emittance_norm,eyn=emittance_norm,
+         halo={6,halor,halox,haloy},bbeat=apbbeat,
+         dparx=DParcx,dpary=DParcy,
+         file=result/ap_ir1b1.tfs;
+
+
+seqedit,sequence=lhcb1;flatten;cycle,start=s.ds.l5.b1;flatten;endedit;
+
+
+use,sequence=lhcb1;
+select,flag=twiss,clear;
+select,flag=twiss,column=name,keyword,parent,kmax,kmin,calib,polarity,
+       s,l,lrad,kick,hkick,vkick,angle,
+       k0l,k1l,k2l,k3l,k4l,k5l,k0sl,k1sl,k2sl,k3sl,k4sl,k5sl,
+       x,y,px,py,betx,bety,alfx,alfy,mux,muy,dx,dy,dpx,dpy,
+       apertype,aper_1,aper_2,aper_3,aper_4,rtol,xtol,ytol,
+      range=s.ds.l5.b1/e.ds.r5.b1;
+twiss,file=result/twiss_ir5b1.tfs;
+
+select,flag=aperture,clear;
+select,flag=aperture,column=name,keyword,parent,
+   s,x,y,px,py,betx,bety,alfx,alfy,mux,muy,dx,dy,dpx,dpy,
+   n1,apertype,aper_1,aper_2,aper_3,aper_4,rtol,xtol,ytol,
+   k0l,k1l,k2l,k3l,k4l,k5l,k0sl,k1sl,k2sl,k3sl,k4sl,k5sl;
+aperture,range=s.ds.l5.b1/e.ds.r5.b1,
+         offsetelem=./offset.IP5.b1.tfs,
+         cor=COmax, dp=dPmax, spec=SPECIF,interval=1.0,
+         exn=emittance_norm,eyn=emittance_norm,
+         halo={6,halor,halox,haloy},bbeat=apbbeat,
+         dparx=DParcx,dpary=DParcy,
+         file=result/ap_ir5b1.tfs;
+
