@@ -266,7 +266,6 @@ if (bs_type == REGOCTATOLL)
 };
 
 value,bs_type,ap_mqx;
-return;
 
 
 ! Author J. Miles based on preliminary data from N. Kos, P.Fessia, R. Jones 17/02/2009

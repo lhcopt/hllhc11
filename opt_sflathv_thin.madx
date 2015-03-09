@@ -62,7 +62,7 @@ abxws.r8      := +0.000045681598453109894*on_lhcb   ;
 
  !Separation/recombination dipoles
 
-kd1.lr1       :=  ad1.lr1/l.mbxa;
+kd1.lr1       :=  ad1.lr1/l.mbxf;
 kd2.l1        :=  ad2.l5/l.mbrd ;
 kd2.r1        :=  ad2.r5/l.mbrd ;
 kd1.l2        :=  ad1.l2/l.mbx  ;
@@ -77,7 +77,7 @@ kd4.l4        :=  ad4.l4/l.mbrb ;
 kd4.r4        :=  ad4.r4/l.mbrb ;
 kd34.lr3      :=  ad3.lr3/l.mbw ;
 kd34.lr7      :=  ad3.lr7/l.mbw ;
-kd1.lr5       :=  ad1.lr5/l.mbxa;
+kd1.lr5       :=  ad1.lr5/l.mbxf;
 kd2.l5        :=  ad2.l5/l.mbrd ;
 kd2.r5        :=  ad2.r5/l.mbrd ;
 kd3.lr7       :=  ad3.lr7/l.mbw ;
