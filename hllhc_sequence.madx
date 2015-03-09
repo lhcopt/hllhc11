@@ -376,8 +376,8 @@ Kmax_MCBXFB := 2.5000 / l.MCBXFB; ! 1.8Tm integrated strength
 Kmin_MCBXFB := -Kmax_MCBXFB ;
 value, Kmax_MCBXFB;
 
-MCBXFBH,  Kmax:=Kmax_MCBXFBH, Kmin:=Kmin_MCBXFBH;
-MCBXFBV,  Kmax:=Kmax_MCBXFBV, Kmin:=Kmin_MCBXFBV;
+MCBXFBH,  Kmax:=Kmax_MCBXFB, Kmin:=Kmin_MCBXFB;
+MCBXFBV,  Kmax:=Kmax_MCBXFB, Kmin:=Kmin_MCBXFB;
 
 
 MCBXFBH.a2L1: MCBXFBH, KICK := acbxh1.l1;
@@ -496,8 +496,8 @@ Imax_MCSSXF= 132;
 Imax_MCSXF = 132;
 
 ! cabling
-MCBXFAH, Kmax:=Kmax_MCBXH3, Kmin:=Kmin_MCBXH3;
-MCBXFAV, Kmax:=Kmax_MCBXV3, Kmin:=Kmin_MCBXV3;
+MCBXFAH, Kmax:=Kmax_MCBXFA, Kmin:=Kmin_MCBXFA;
+MCBXFAV, Kmax:=Kmax_MCBXFA, Kmin:=Kmin_MCBXFA;
 MCBXFAH.3L1: MCBXFAH, KICK := acbxh3.l1;
 MCBXFAH.3R1: MCBXFAH, KICK := acbxh3.r1;
 MCBXFAH.3L5: MCBXFAH, KICK := acbxh3.l5;
