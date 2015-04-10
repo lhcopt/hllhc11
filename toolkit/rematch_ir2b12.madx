@@ -68,6 +68,12 @@ constraint, sequence=lhcb1, range=mqm.6l2.b1,bety<apq6;
 constraint, sequence=lhcb2, range=mqm.6r2.b2,bety<apq6;
 constraint, sequence=lhcb2, range=mqm.6l2.b2,betx<apq6;
 };
+if (apq7>50){
+constraint, sequence=lhcb1, range=MQM.B7L2.B1 ,betx<apq7;
+constraint, sequence=lhcb1, range=MQM.A7R2.B1 ,bety<apq7;
+constraint, sequence=lhcb2, range=MQM.B7L2.B2 ,bety<apq7;
+constraint, sequence=lhcb2, range=MQM.A7R2.B2 ,betx<apq7;
+};
 if (apq8>50){
 constraint, sequence=lhcb1, range=mqml.8r2.b1,betx<apq8;
 constraint, sequence=lhcb1, range=mqml.8l2.b1,bety<apq8;
