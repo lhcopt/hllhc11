@@ -27,10 +27,10 @@ betx_IP1    =            30.000000 ;
 bety_IP1    =            30.000000 ;
 betx_IP5    =            30.000000 ;
 bety_IP5    =            30.000000 ;
-betx0_IP1   =             6.000000 ;
-bety0_IP1   =             6.000000 ;
-betx0_IP5   =             6.000000 ;
-bety0_IP5   =             6.000000 ;
+betx0_IP1   =            30.000000 ;
+bety0_IP1   =            30.000000 ;
+betx0_IP5   =            30.000000 ;
+bety0_IP5   =            30.000000 ;
 
  !***Exp. configuration in IR1, IR2, IR5 and IR8***
 on_sep1=0;on_x1=0;on_os1=0;on_ox1=0;phi_IR1=90;

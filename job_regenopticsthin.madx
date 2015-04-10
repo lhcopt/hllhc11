@@ -76,12 +76,12 @@ exec,check_ip(b1); exec,check_ip(b2);
 };
 
 exec,mk_beam(7000);
-!exec,regen_squeeze(round);
-!exec,regen_squeeze(sround);
-!exec,regen_squeeze(flat);
-!exec,regen_squeeze(flathv);
+exec,regen_squeeze(round);
+exec,regen_squeeze(sround);
+exec,regen_squeeze(flat);
+exec,regen_squeeze(flathv);
 exec,regen_squeeze(sflat);
-!exec,regen_squeeze(sflathv);
+exec,regen_squeeze(sflathv);
 
 regen_inj(filename): macro={
 call,file="opt_filename.madx"; is_thin=1;
